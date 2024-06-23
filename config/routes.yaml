@@ -1,5 +1,5 @@
 controllers:
     resource:
         path: ../src/Framework/Controller/
-        namespace: App\FrameworkController
+        namespace: App\Framework\Controller
     type: attribute
