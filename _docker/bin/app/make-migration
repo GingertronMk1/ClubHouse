@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+source .env
+
+./_docker/bin/app/exec composer phinx create "$@"

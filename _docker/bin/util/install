@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+
+docker-compose build \
+&& docker-compose up -d \
+&& ./_docker/bin/app/composer install \
+&& ./_docker/bin/app/migrate \
+&& ./_docker/bin/node/npm install \
+&& ./_docker/bin/node/npm run dev \
+&& ./_docker/bin/app/console app:add-admin-user \
+&& docker-compose stop \
+&& cp phpunit.xml.dist phpunit.xml
