@@ -2,6 +2,8 @@
 
 namespace App\Framework\Controller;
 
+use App\Application\User;
+use App\Domain\User\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -28,5 +30,17 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    #[Route(path: 'make_user')]
+    public function makeUserQuick(UserRepositoryInterface $repo): Response
+    {
+        $user = new User(
+            $repo->generateId(),
+            'test@test.test',
+            '12345',
+            []
+        );
+        return new Response($repo->store($user));
     }
 }

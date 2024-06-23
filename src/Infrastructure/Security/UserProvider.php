@@ -45,8 +45,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
             'email',
             'password',
         )->from('users')
-            ->where('id = :id')
-            ->setParameter('id', $identifier)
+            ->where('email = :email')
+            ->setParameter('email', $identifier)
         ;
 
         $result = $query->fetchAssociative();
