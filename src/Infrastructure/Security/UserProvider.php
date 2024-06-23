@@ -15,6 +15,9 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
@@ -53,9 +56,9 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         }
 
         return new User(
-            UserId::fromString($result['id']),
-            $result['email'],
-            $result['password'],
+            UserId::fromString((string) $result['id']),
+            (string) $result['email'],
+            (string) $result['password'],
             []
         );
     }

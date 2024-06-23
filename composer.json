@@ -58,7 +58,12 @@
             "@auto-scripts"
         ],
         "check-cs": "vendor/bin/ecs check --ansi",
-        "fix-cs": "vendor/bin/ecs check --fix --ansi"
+        "fix-cs": "vendor/bin/ecs check --fix --ansi",
+        "check-fix": [
+            "@fix-cs",
+            "vendor/bin/phpstan analyse"
+        ]
+
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -70,6 +75,7 @@
         }
     },
     "require-dev": {
+        "phpstan/phpstan": "^1.11",
         "symfony/maker-bundle": "*",
         "symplify/easy-coding-standard": "^12"
     }

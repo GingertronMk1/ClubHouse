@@ -8,7 +8,7 @@ use Symfony\Component\Uid\UuidV7;
 
 abstract class AbstractUuidId extends AbstractId
 {
-    public function __construct(
+    final protected function __construct(
         private readonly UuidV7 $uuid
     ) {}
 
@@ -44,10 +44,8 @@ abstract class AbstractUuidId extends AbstractId
 
     /**
      * Generate a random UUID instance.
-     *
-     * @return static
      */
-    public static function generate(): self
+    public static function generate(): static
     {
         return new static(new UuidV7());
     }
@@ -57,11 +55,9 @@ abstract class AbstractUuidId extends AbstractId
      *
      * @param string $uuid the ID
      *
-     * @return static
-     *
      * @throws \InvalidArgumentException thrown if the string is not a valid UUID
      */
-    public static function fromString(string $uuid): self
+    public static function fromString(string $uuid): static
     {
         return new static(UuidV7::fromString($uuid));
     }

@@ -10,6 +10,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    /**
+     * Undocumented function.
+     *
+     * @param array<string> $roles
+     */
     public function __construct(
         public readonly UserId $id,
         public readonly string $email,
