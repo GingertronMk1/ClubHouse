@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Framework\Security;
+namespace App\Infrastructure\Security;
 
 use App\Application\User;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -12,6 +13,11 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
+    public function __construct(
+        private readonly Connection $connection
+    )
+    {
+    }
     /**
      * Symfony calls this method if you use features like switch_user
      * or remember_me.
