@@ -1,8 +1,8 @@
 # ClubHouse
 
-### `src` Structure
+## `src` Structure
 
-##### Domain
+### Domain
 
 The base level. This level is how things get turned into
 
@@ -12,23 +12,23 @@ This contains:
 - Basic classes that extend either other types in `Domain` or PHP basic types
 - Write models
 
-##### Application
+### Application
 
 This contains:
 
 - Finder interfaces that are picked up at the `Infrastructure` level
 - Read models
 
-##### Infrastructure
+### Infrastructure
 
 This is where external services come into play.
 This layer contains implementations for the aforementioned interfaces, and any external APIs.
 
-##### Framework
+### Framework
 
 Framework-specific code, such as Symfony's `UserProvider`.
 
-##### Deptrac config
+### Deptrac config
 
 ```yaml
 Framework:
