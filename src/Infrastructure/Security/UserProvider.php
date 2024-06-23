@@ -3,7 +3,9 @@
 namespace App\Infrastructure\Security;
 
 use App\Application\User;
+use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -27,13 +29,33 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      *
      * @throws UserNotFoundException if the user is not found
      */
-    public function loadUserByIdentifier($identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         // Load a User object from your data source or throw UserNotFoundException.
         // The $identifier argument may not actually be a username:
         // it is whatever value is being returned by the getUserIdentifier()
         // method in your User class.
-        throw new \Exception('TODO: fill in loadUserByIdentifier() inside '.__FILE__);
+        $query = $this->connection->createQueryBuilder();
+        $query->select(
+            'id',
+            'email',
+            'password',
+        )->from('users')
+        ->where('id = :id')
+        ->setParameter('id', $identifier);
+
+        $result = $query->fetchAssociative();
+
+        if (!$result) {
+            throw new NotFoundHttpException();
+        }
+
+        return new User(
+            UserId::fromString($result['id']),
+            $result['email'],
+            $result['password'],
+            []
+        );
     }
 
     /**
