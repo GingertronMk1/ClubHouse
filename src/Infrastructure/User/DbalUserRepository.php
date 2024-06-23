@@ -8,13 +8,12 @@ use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class DbalUserRepository implements UserRepositoryInterface {
+class DbalUserRepository implements UserRepositoryInterface
+{
     public function __construct(
         private readonly Connection $connection,
         private readonly UserPasswordHasherInterface $hasher,
-    )
-    {
-    }
+    ) {}
 
     public function generateId(): UserId
     {
@@ -35,10 +34,11 @@ class DbalUserRepository implements UserRepositoryInterface {
                 ->set('email', ':email')
                 ->set('password', ':password')
                 ->setParameters([
-                'id' => (string) $user->id,
-                'email' => $user->email,
-                'password' => $hashedPassword
-            ]);
+                    'id' => (string) $user->id,
+                    'email' => $user->email,
+                    'password' => $hashedPassword,
+                ])
+            ;
             $updateQuery->executeStatement();
         } else {
             $insertQuery = $this->connection->createQueryBuilder();
@@ -47,13 +47,14 @@ class DbalUserRepository implements UserRepositoryInterface {
                 ->values([
                     'id' => ':id',
                     'email' => ':email',
-                    'password' => ':password'
+                    'password' => ':password',
                 ])
                 ->setParameters([
                     'id' => (string) $user->id,
                     'email' => $user->email,
-                    'password' => $hashedPassword
-                ]);
+                    'password' => $hashedPassword,
+                ])
+            ;
             $insertQuery->executeStatement();
         }
 

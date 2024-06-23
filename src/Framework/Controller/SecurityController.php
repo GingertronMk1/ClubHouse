@@ -41,6 +41,7 @@ class SecurityController extends AbstractController
             '12345',
             []
         );
+
         return new Response($repo->store($user));
     }
 }
