@@ -5,16 +5,24 @@ declare(strict_types=1);
 namespace App\Domain\Common\ValueObject;
 
 use Symfony\Component\Uid\UuidV7;
-use InvalidArgumentException;
 
 abstract class AbstractUuidId extends AbstractId
 {
     public function __construct(
         private readonly UuidV7 $uuid
-    )
+    ) {}
+
+    /**
+     * Get a string representation of this object.
+     *
+     * @return string the ID
+     */
+    public function __toString(): string
     {
+        return $this->uuid->toString();
     }
-        /**
+
+    /**
      * Check if a string represents a valid UUID.
      *
      * @param string $uuid the string to check
@@ -27,7 +35,7 @@ abstract class AbstractUuidId extends AbstractId
 
         try {
             static::fromString($uuid);
-        } catch (InvalidArgumentException) {
+        } catch (\InvalidArgumentException) {
             $valid = false;
         }
 
@@ -49,23 +57,13 @@ abstract class AbstractUuidId extends AbstractId
      *
      * @param string $uuid the ID
      *
-     * @throws InvalidArgumentException thrown if the string is not a valid UUID
-     *
      * @return static
+     *
+     * @throws \InvalidArgumentException thrown if the string is not a valid UUID
      */
     public static function fromString(string $uuid): self
     {
         return new static(UuidV7::fromString($uuid));
-    }
-
-    /**
-     * Get a string representation of this object.
-     *
-     * @return string the ID
-     */
-    public function __toString(): string
-    {
-        return $this->uuid->toString();
     }
 
     /**

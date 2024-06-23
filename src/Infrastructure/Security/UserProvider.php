@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Infrastructure\Security;
 
 use App\Application\User;
@@ -17,9 +19,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
         private readonly Connection $connection
-    )
-    {
-    }
+    ) {}
+
     /**
      * Symfony calls this method if you use features like switch_user
      * or remember_me.
@@ -41,8 +42,9 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
             'email',
             'password',
         )->from('users')
-        ->where('id = :id')
-        ->setParameter('id', $identifier);
+            ->where('id = :id')
+            ->setParameter('id', $identifier)
+        ;
 
         $result = $query->fetchAssociative();
 
@@ -60,6 +62,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     /**
      * @deprecated since Symfony 5.3, loadUserByIdentifier() is used instead
+     *
+     * @param mixed $username
      */
     public function loadUserByUsername($username): UserInterface
     {

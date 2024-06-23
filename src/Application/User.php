@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application;
 
 use App\Domain\User\ValueObject\UserId;
@@ -13,9 +15,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         public readonly string $email,
         public readonly string $password,
         public readonly array $roles,
-    ) {
-
-    }
+    ) {}
 
     public function getRoles(): array
     {

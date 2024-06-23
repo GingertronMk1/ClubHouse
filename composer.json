@@ -56,7 +56,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+        "check-cs": "vendor/bin/ecs check --ansi",
+        "fix-cs": "vendor/bin/ecs check --fix --ansi"
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -68,6 +70,7 @@
         }
     },
     "require-dev": {
-        "symfony/maker-bundle": "*"
+        "symfony/maker-bundle": "*",
+        "symplify/easy-coding-standard": "^12"
     }
 }
