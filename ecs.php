@@ -18,4 +18,4 @@ return ECSConfig::configure()
         phpCsFixer: true
     )
      
-     ;
+    ;
