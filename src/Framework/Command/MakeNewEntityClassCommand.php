@@ -63,7 +63,7 @@ class MakeNewEntityClassCommand extends Command
 
             $extends = '';
             if (isset($information['extends'])) {
-                $extends = " extends {$information['extends']}";
+                $extends = " extends \\{$information['extends']}";
             }
 
             try {
