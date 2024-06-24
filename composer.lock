@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d8664facaa080293fef62cecbb8b1435",
+    "content-hash": "4d6f2da67440a1ad10c7f5e3631bb9c1",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -4953,6 +4953,51 @@
                 }
             ],
             "time": "2024-06-17T15:10:54+00:00"
+        },
+        {
+            "name": "qossmic/deptrac",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/qossmic/deptrac.git",
+                "reference": "f646695c1468051138e1347d89590f9084fa6256"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/qossmic/deptrac/zipball/f646695c1468051138e1347d89590f9084fa6256",
+                "reference": "f646695c1468051138e1347d89590f9084fa6256",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.1"
+            },
+            "suggest": {
+                "ext-dom": "For using the JUnit output formatter"
+            },
+            "bin": [
+                "bin/deptrac",
+                "deptrac.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Qossmic\\Deptrac\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Deptrac is a static code analysis tool that helps to enforce rules for dependencies between software layers.",
+            "support": {
+                "issues": "https://github.com/qossmic/deptrac/issues",
+                "source": "https://github.com/qossmic/deptrac/tree/2.0.1"
+            },
+            "time": "2024-06-17T10:43:11+00:00"
         },
         {
             "name": "symfony/maker-bundle",

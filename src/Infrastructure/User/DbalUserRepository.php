@@ -2,7 +2,7 @@
 
 namespace App\Infrastructure\User;
 
-use App\Application\User;
+use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;

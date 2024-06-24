@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Domain;
+namespace App\Domain\User;
 
 use App\Domain\User\ValueObject\UserId;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * Undocumented function.
@@ -19,4 +21,24 @@ class User
         public readonly string $password,
         public readonly array $roles,
     ) {}
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->id;
+    }
+
+    public function eraseCredentials(): void
+    {
+        // no op
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
 }
