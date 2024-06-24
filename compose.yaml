@@ -54,6 +54,10 @@ services:
     platform: linux/x86_64
     ports:
       - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - './_docker/plugins:/var/www/html/plugins-enabled:delegated'
     networks:
       - clubhouse-network
 
