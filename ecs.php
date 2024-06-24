@@ -12,6 +12,7 @@ return ECSConfig::configure()
         __DIR__.'/public',
         __DIR__.'/src',
         __DIR__.'/tests',
+        __DIR__.'/_docker/plugins',
     ])
     // add sets - group of rules
     ->withPhpCsFixerSets(
