@@ -1,0 +1,41 @@
+name: Testing
+
+on:
+    pull_request:
+        branches:
+            - main
+    push:
+        branches:
+            - main
+
+jobs:
+    testing:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: Cache Composer
+              id: cache-composer
+              uses: actions/cache@v3
+              with:
+                path: vendor
+                key: ${{ hashFiles('composer.lock') }}
+            - name: Cache NPM
+              id: cache-npm
+              uses: actions/cache@v3
+              with:
+                path: node_modules
+                key: ${{ hashFiles('package-lock.json') }}
+            - name: Install
+              run: ./_docker/bin/util/install
+            - name: Start
+              run: ./_docker/bin/util/start
+            - name: Deptrac
+              run: ./_docker/bin/app/composer deptrac
+              if: always()
+            - name: ECS
+              run: ./_docker/bin/app/composer check-cs
+              if: always()
+            - name: Stan
+              run: ./_docker/bin/app/composer stan
+              if: always()
