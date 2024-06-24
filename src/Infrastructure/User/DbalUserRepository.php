@@ -10,6 +10,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class DbalUserRepository implements UserRepositoryInterface
 {
+    private const TABLE_NAME = 'users';
+
     public function __construct(
         private readonly Connection $connection,
         private readonly UserPasswordHasherInterface $hasher,
@@ -23,13 +25,13 @@ class DbalUserRepository implements UserRepositoryInterface
     public function store(User $user): UserId
     {
         $existsQuery = $this->connection->createQueryBuilder();
-        $existsQuery->select('*')->from('users')->where('id = :id')->setParameter('id', (string) $user->id);
+        $existsQuery->select('*')->from(self::TABLE_NAME)->where('id = :id')->setParameter('id', (string) $user->id);
 
         $hashedPassword = $this->hasher->hashPassword($user, $user->password);
         if ($existsQuery->fetchAssociative()) {
             $updateQuery = $this->connection->createQueryBuilder();
             $updateQuery
-                ->update('users')
+                ->update(self::TABLE_NAME)
                 ->where('id = :id')
                 ->set('email', ':email')
                 ->set('password', ':password')
@@ -41,9 +43,19 @@ class DbalUserRepository implements UserRepositoryInterface
             ;
             $updateQuery->executeStatement();
         } else {
+            $emailExistsQuery = $this->connection->createQueryBuilder();
+            $emailExistsQuery
+                ->select('*')
+                ->from(self::TABLE_NAME)
+                ->where('email = :email')
+                ->setParameter('email', $user->email)
+            ;
+            if ($emailExistsQuery->fetchAssociative()) {
+                throw new \InvalidArgumentException('User with that email already exists');
+            }
             $insertQuery = $this->connection->createQueryBuilder();
             $insertQuery
-                ->insert('users')
+                ->insert(self::TABLE_NAME)
                 ->values([
                     'id' => ':id',
                     'email' => ':email',
