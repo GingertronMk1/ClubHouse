@@ -63,8 +63,8 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "check-cs": "vendor/bin/ecs check --ansi",
-        "fix-cs": "vendor/bin/ecs check --fix --ansi",
+        "check-cs": "vendor/bin/ecs check --ansi --clear-cache",
+        "fix-cs": "vendor/bin/ecs check --fix --ansi --clear-cache",
         "stan": "vendor/bin/phpstan analyse",
         "deptrac": "vendor/bin/deptrac",
         "check-fix": [
