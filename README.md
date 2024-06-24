@@ -4,7 +4,7 @@
 
 ### Domain
 
-The base level. This level is how things get turned into
+The base level. This level is how things get turned into DB objects
 
 This contains: 
 
