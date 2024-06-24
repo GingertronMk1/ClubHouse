@@ -61,6 +61,11 @@ class MakeNewEntityClassCommand extends Command
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
+            $extends = '';
+            if (isset($information['extends'])) {
+                $extends = " extends {$information['extends']}";
+            }
+
             try {
                 $io->info("Creating `$dir`");
                 mkdir($dir, recursive: true);
@@ -69,7 +74,23 @@ class MakeNewEntityClassCommand extends Command
             }
             $fileNameExtended = "{$replacedFileName}.php";
             $io->info("Creating `{$fileNameExtended}");
-            fopen($fileNameExtended, 'w');
+            $file = fopen($fileNameExtended, 'w');
+            fwrite($file, <<<EOF
+            <?php
+
+            declare(strict_types=1);
+
+            namespace {$nameSpace};
+
+            class {$className}{$extends}
+            {
+                public function __construct(
+                )
+                {
+                }
+            }
+            
+            EOF);
         }
 
 
