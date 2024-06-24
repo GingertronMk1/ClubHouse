@@ -16,6 +16,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class MakeAdminUserCommand extends Command
 {
+    private const ADMIN_EMAIL = 'test@clubhouse.test';
+    private const ADMIN_PASSWORD = '12345';
+
     public function __construct(
         private readonly UserRepositoryInterface $userRepository
     ) {
@@ -35,14 +38,14 @@ class MakeAdminUserCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $user = new User(
             $this->userRepository->generateId(),
-            'test@clubhouse.test',
-            '12345',
+            self::ADMIN_EMAIL,
+            self::ADMIN_PASSWORD,
             []
         );
 
         $this->userRepository->store($user);
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('User created');
 
         return Command::SUCCESS;
     }
