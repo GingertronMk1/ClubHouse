@@ -3,6 +3,15 @@
     font-family: sans-serif;
 }
 
+@mixin container() {
+    > * {
+        width: 95%;
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+}
+
 html,
 body {
     margin: 0;
@@ -16,4 +25,29 @@ body {
 
 body {
     background-color: lightgray;
+}
+
+.main {
+    @include container;
+
+    &__inner {
+        padding: 1rem;
+    }
+}
+
+.nav {
+    display: flex;
+    flex-direction: row;
+    @include container;
+    background-color: #6495ed;
+
+    &__inner {
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+    }
+
+    &__login-out-button {
+        margin-left: auto;
+    }
 }
