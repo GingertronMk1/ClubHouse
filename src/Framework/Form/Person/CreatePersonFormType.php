@@ -6,7 +6,7 @@ namespace App\Framework\Form\Person;
 
 use Symfony\Component\Form\AbstractType;
 
-class CreatePersonType extends AbstractType
+class CreatePersonFormType extends AbstractType
 {
     public function __construct(
     ) {}

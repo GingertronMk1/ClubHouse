@@ -45,17 +45,31 @@ class MakeNewEntityClassCommand extends Command
 
         foreach ($this->getClassFileNames() as $classFileName => $information) {
             $replacedFileName = preg_replace('/{ENTITY}/', $arg1, $classFileName);
+            $replacedFileName = $this->kernel->getProjectDir().'/'.$replacedFileName;
             $fqn = preg_replace(
                 ['/\//', '/^src/'],
                 ['\\', 'App'],
                 $replacedFileName
             );
+
+            if (!is_string($fqn)) {
+                throw new \Exception("Something's gone wrong");
+            }
             $lastBackslash = strrpos($fqn, '\\');
+
+            if (false === $lastBackslash) {
+                throw new \Exception("Something's gone wrong");
+            }
+
             $nameSpace = substr($fqn, 0, $lastBackslash);
             $className = substr($fqn, $lastBackslash + 1);
             $io->info([$fqn, $nameSpace, $className]);
 
             $fileDelimiter = strrpos($replacedFileName, '/');
+
+            if (false === $fileDelimiter) {
+                throw new \Exception("Something's gone wrong");
+            }
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
@@ -73,6 +87,9 @@ class MakeNewEntityClassCommand extends Command
             $fileNameExtended = "{$replacedFileName}.php";
             $io->info("Creating `{$fileNameExtended}");
             $file = fopen($fileNameExtended, 'w');
+            if (!$file) {
+                throw new \Exception("Something's gone wrong");
+            }
             fwrite($file, <<<EOF
             <?php
 
@@ -96,6 +113,9 @@ class MakeNewEntityClassCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @return array<string, ?array<mixed>>
+     */
     private function getClassFileNames(): array
     {
         return [
@@ -115,10 +135,10 @@ class MakeNewEntityClassCommand extends Command
             'src/Framework/Controller/{ENTITY}Controller' => [
                 'extends' => AbstractController::class,
             ],
-            'src/Framework/Form/{ENTITY}/Create{ENTITY}Type' => [
+            'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => [
                 'extends' => AbstractType::class,
             ],
-            'src/Framework/Form/{ENTITY}/Edit{ENTITY}Type' => [
+            'src/Framework/Form/{ENTITY}/Edit{ENTITY}FormType' => [
                 'extends' => AbstractType::class,
             ],
         ];

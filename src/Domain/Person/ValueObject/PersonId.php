@@ -6,8 +6,4 @@ namespace App\Domain\Person\ValueObject;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
 
-class PersonId extends AbstractUuidId
-{
-    public function __construct(
-    ) {}
-}
+class PersonId extends AbstractUuidId {}

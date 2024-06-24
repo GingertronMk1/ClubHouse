@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domain\Person;
 
-class PersonRepositoryInterface
+use App\Domain\Person\ValueObject\PersonId;
+
+interface PersonRepositoryInterface
 {
-    public function __construct(
-    ) {}
+    public function generateId(): PersonId;
+
+    public function store(Person $person): PersonId;
 }
