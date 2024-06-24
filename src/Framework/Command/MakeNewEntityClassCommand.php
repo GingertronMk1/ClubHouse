@@ -69,7 +69,7 @@ class MakeNewEntityClassCommand extends Command
             }
             $fileNameExtended = "{$replacedFileName}.php";
             $io->info("Creating `{$fileNameExtended}");
-            fopen($fileNameExtended . '.php', 'w');
+            fopen($fileNameExtended, 'w');
         }
 
 
