@@ -2,7 +2,11 @@
 
 namespace App\Framework\Controller;
 
+use App\Application\User\Command\CreateUserCommand;
+use App\Application\User\CommandHandler\CreateUserCommandHandler;
+use App\Framework\Form\CreateUserFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -28,5 +32,32 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+    #[Route(path: '/register', name: 'app_register')]
+    public function register(
+        CreateUserCommandHandler $handler,
+        Request $request,
+    ): Response {
+        $command = new CreateUserCommand();
+        $form = $this->createForm(CreateUserFormType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+
+                return $this->redirectToRoute('home');
+            } catch (\Throwable $e) {
+                throw new \Exception('Error creating user', previous: $e);
+            }
+        }
+
+        return $this->render(
+            'security/register.html.twig',
+            [
+                'form' => $form,
+            ]
+        );
     }
 }

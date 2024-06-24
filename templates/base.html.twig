@@ -13,6 +13,28 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="nav">
+            <div class="nav__inner">
+            {% if app.user %}
+                <span class="nav__user-button">
+                    {{ app.user.email }}
+                </span>
+            {% endif %}
+            <span class="nav__login-out-button">
+                {% if app.user %}
+                    <a href="{{ path('app_logout') }}">Log Out</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}">Log In</a>
+                    <a href="{{ path('app_register') }}">Register</a>
+                {% endif %}
+            </span>
+            </div>
+        </nav>
+        <div class="main">
+            <div class="main__inner">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+        </main>
     </body>
 </html>
