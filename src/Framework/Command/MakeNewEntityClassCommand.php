@@ -60,7 +60,6 @@ class MakeNewEntityClassCommand extends Command
             $fileDelimiter = strrpos($replacedFileName, '/');
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
-            $fileName = substr($replacedFileName, $fileDelimiter + 1);
 
             try {
                 $io->info("Creating `$dir`");
@@ -68,7 +67,7 @@ class MakeNewEntityClassCommand extends Command
             } catch (\Throwable $e) {
                 $io->error($e->getMessage());
             }
-            $fileNameExtended = "{$fileName}.php";
+            $fileNameExtended = "{$replacedFileName}.php";
             $io->info("Creating `{$fileNameExtended}");
             fopen($fileNameExtended . '.php', 'w');
         }
