@@ -3,8 +3,8 @@
 docker-compose up -d --build \
 && ./_docker/bin/app/composer install \
 && ./_docker/bin/app/migrate \
-&& ./_docker/bin/node/npm install \
-&& ./_docker/bin/node/npm run dev \
+# && ./_docker/bin/node/npm install \
+# && ./_docker/bin/node/npm run dev \
 && ./_docker/bin/app/console app:add-admin-user \
 && docker-compose stop \
 && touch .env.local
