@@ -26,7 +26,13 @@ class DefaultLogin
             $inputValue = $_ENV[$envValue];
         }
 
-        return "<tr><td><input name=\"auth[{$name}]\" value=\"{$inputValue}\" /></td></tr>";
+        return <<<HTML
+			<tr>
+				<td>
+					<input name="auth[{$name}]" value="{$inputValue}" />
+				</td>
+			</tr>
+		HTML;
     }
 }
 
