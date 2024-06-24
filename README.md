@@ -42,3 +42,22 @@ Application:
     - Domain
 Domain: ~
 ```
+
+### What does this all mean?
+
+When we're adding a new entity we should add the following:
+
+- `src/Domain/{ENTITY}/ValueObject/{ENTITY}Id` - probably an extension of `AbstractUuidId`
+- `src/Domain/{ENTITY}/{ENTITY}RepositoryInterface`
+- `src/Domain/{ENTITY}/{ENTITY}` - this will be your write model
+- `src/Application/{ENTITY}/Command/Create{ENTITY}Command`
+- `src/Application/{ENTITY}/Command/Edit{ENTITY}Command`
+- `src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler`
+- `src/Application/{ENTITY}/CommandHandler/Edit{ENTITY}CommandHandler`
+- `src/Application/{ENTITY}/{ENTITY}FinderInterface`
+- `src/Application/{ENTITY}/{ENTITY}` - this will be your read model
+- `src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder`
+- `src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository`
+- `src/Framework/Controller/{ENTITY}Controller`
+- `src/Framework/Form/Create{ENTITY}Type`
+- `src/Framework/Form/Edit{ENTITY}Type`
