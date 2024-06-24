@@ -7,7 +7,5 @@ namespace App\Application\Person\Command;
 class CreatePersonCommand
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

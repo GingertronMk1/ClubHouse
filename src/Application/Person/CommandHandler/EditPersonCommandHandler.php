@@ -7,7 +7,5 @@ namespace App\Application\Person\CommandHandler;
 class EditPersonCommandHandler
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

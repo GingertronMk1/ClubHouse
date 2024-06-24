@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Person\ValueObject;
 
-class PersonId extends \App\Domain\Common\ValueObject\AbstractUuidId
+use App\Domain\Common\ValueObject\AbstractUuidId;
+
+class PersonId extends AbstractUuidId
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

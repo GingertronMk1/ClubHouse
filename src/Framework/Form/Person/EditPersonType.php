@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Framework\Form\Person;
 
-class EditPersonType extends \Symfony\Component\Form\AbstractType
+use Symfony\Component\Form\AbstractType;
+
+class EditPersonType extends AbstractType
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

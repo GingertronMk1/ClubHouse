@@ -7,7 +7,5 @@ namespace App\Domain\Person;
 class PersonRepositoryInterface
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

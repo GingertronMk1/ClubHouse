@@ -7,7 +7,5 @@ namespace App\Domain\Person;
 class Person
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

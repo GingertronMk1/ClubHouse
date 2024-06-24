@@ -7,7 +7,5 @@ namespace App\Infrastructure\Person;
 class DbalPersonRepository
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

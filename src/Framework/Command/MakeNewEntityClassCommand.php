@@ -8,7 +8,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Form\AbstractType;
@@ -24,8 +23,7 @@ class MakeNewEntityClassCommand extends Command
 
     public function __construct(
         private readonly KernelInterface $kernel
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -45,8 +43,8 @@ class MakeNewEntityClassCommand extends Command
             $io->note(sprintf('You passed an argument: %s', $arg1));
         }
 
-        foreach($this->getClassFileNames() as $classFileName => $information) {
-            $replacedFileName = preg_replace( '/{ENTITY}/', $arg1, $classFileName);
+        foreach ($this->getClassFileNames() as $classFileName => $information) {
+            $replacedFileName = preg_replace('/{ENTITY}/', $arg1, $classFileName);
             $fqn = preg_replace(
                 ['/\//', '/^src/'],
                 ['\\', 'App'],
@@ -67,7 +65,7 @@ class MakeNewEntityClassCommand extends Command
             }
 
             try {
-                $io->info("Creating `$dir`");
+                $io->info("Creating `{$dir}`");
                 mkdir($dir, recursive: true);
             } catch (\Throwable $e) {
                 $io->error($e->getMessage());
@@ -93,7 +91,6 @@ class MakeNewEntityClassCommand extends Command
             EOF);
         }
 
-
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return Command::SUCCESS;
@@ -116,13 +113,13 @@ class MakeNewEntityClassCommand extends Command
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => null,
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => null,
             'src/Framework/Controller/{ENTITY}Controller' => [
-                'extends' => AbstractController::class
+                'extends' => AbstractController::class,
             ],
             'src/Framework/Form/{ENTITY}/Create{ENTITY}Type' => [
                 'extends' => AbstractType::class,
             ],
             'src/Framework/Form/{ENTITY}/Edit{ENTITY}Type' => [
-                'extends' => AbstractType::class
+                'extends' => AbstractType::class,
             ],
         ];
     }

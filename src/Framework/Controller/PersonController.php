@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-class PersonController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class PersonController extends AbstractController
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }
