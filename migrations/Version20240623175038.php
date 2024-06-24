@@ -35,7 +35,7 @@ final class Version20240623175038 extends AbstractMigration
         );
 
         $table->setPrimaryKey(['id']);
-        $table->addIndex(['email']);
+        $table->addUniqueIndex(['email']);
     }
 
     public function down(Schema $schema): void
