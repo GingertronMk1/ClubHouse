@@ -49,7 +49,7 @@ class MakeNewEntityClassCommand extends Command
             $replacedFileName = preg_replace( '/{ENTITY}/', $arg1, $classFileName);
             $fqn = preg_replace(
                 ['/\//', '/^src/'],
-                ['\\', $arg1, 'App'],
+                ['\\', 'App'],
                 $replacedFileName
             );
             $lastBackslash = strrpos($fqn, '\\');
