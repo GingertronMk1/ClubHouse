@@ -52,7 +52,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
         $result = $query->fetchAssociative();
 
         if (!$result) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException("Could not find user by identifier `{$identifier}`.");
         }
 
         return new User(
@@ -92,7 +92,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
         // Return a User object after making sure its data is "fresh".
         // Or throw a UsernameNotFoundException if the user no longer exists.
-        throw new \Exception('TODO: fill in refreshUser() inside '.__FILE__);
+        return $this->loadUserByIdentifier($user->getUserIdentifier());
     }
 
     /**
