@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Application\Team\CommandHandler;
+namespace App\Application\Team\CommandHandler;
 
 class CreateTeamCommandHandler
 {

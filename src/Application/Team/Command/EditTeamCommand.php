@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Application\Team\Command;
+namespace App\Application\Team\Command;
 
 class EditTeamCommand
 {

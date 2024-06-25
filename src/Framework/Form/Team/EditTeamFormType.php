@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Framework\Form\Team;
+namespace App\Framework\Form\Team;
 
 class EditTeamFormType extends \Symfony\Component\Form\AbstractType
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Framework\Controller;
+namespace App\Framework\Controller;
 
 class TeamController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {

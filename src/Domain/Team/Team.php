@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Domain\Team;
+namespace App\Domain\Team;
 
 class Team
 {

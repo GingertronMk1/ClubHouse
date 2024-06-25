@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace \var\www\src\Infrastructure\Team;
+namespace App\Infrastructure\Team;
 
 class DbalTeamFinder
 {
