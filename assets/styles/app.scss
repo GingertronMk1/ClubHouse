@@ -59,8 +59,14 @@ body {
         padding: 1rem;
     }
 
-    &__login-out-button {
+    &__account-buttons {
         margin-left: auto;
+    }
+
+    &__nav-links {
+        > a + a {
+            margin-left: 0.5rem;
+        }
     }
 }
 

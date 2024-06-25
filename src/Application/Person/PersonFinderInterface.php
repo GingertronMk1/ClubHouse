@@ -11,7 +11,9 @@ interface PersonFinderInterface
     public function getById(PersonId $id): Person;
 
     /**
+     * @param array<PersonId> $peopleIds
+     *
      * @return array<Person>
      */
-    public function getAll(): array;
+    public function getAll(array $peopleIds = []): array;
 }

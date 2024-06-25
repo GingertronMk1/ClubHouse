@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Framework\Command;
+namespace App\Framework\CliCommand;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,7 +47,7 @@ class MakeNewEntityClassCommand extends Command
             $replacedFileName = preg_replace('/{ENTITY}/', $arg1, $classFileName);
             $replacedFileName = $this->kernel->getProjectDir().'/'.$replacedFileName;
             $fqn = preg_replace(
-                ['/\//', '/^src/'],
+                ['/\//', '/^.*src/'],
                 ['\\', 'App'],
                 $replacedFileName
             );
@@ -138,7 +138,7 @@ class MakeNewEntityClassCommand extends Command
             'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => [
                 'extends' => AbstractType::class,
             ],
-            'src/Framework/Form/{ENTITY}/Edit{ENTITY}FormType' => [
+            'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => [
                 'extends' => AbstractType::class,
             ],
         ];

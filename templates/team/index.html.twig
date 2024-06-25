@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block classes %}people{% endblock %}
+
+{% block body %}
+    {% set people = people|default([]) %}
+
+    <a class="people__create-link" href="{{ path('team.create') }}">New</a>
+    <table class="people__table">
+            <tr>
+                <th>Team Name</th>
+                <th>Description</th>
+                <th>People</th>
+                <th>Created At</th>
+                <th>Last Updated At</th>
+                <th>Actions</th>
+            </tr>
+    {% for team in teams %}
+        <tr data-team-id="{{ team.id }}">
+            <td>{{ team.name }}</td>
+            <td>{{ team.description }}</td>
+            <td>{{ team.people|map(p => p.name)|join(', ') }}</td>
+            <td>{{ team.createdAt }}</td>
+            <td>{{ team.updatedAt }}</td>
+            <td><a href="{{ path('team.update', {teamId: team.id}) }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

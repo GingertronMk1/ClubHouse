@@ -20,9 +20,6 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(path: '/person', name: 'person.')]
 class PersonController extends AbstractController
 {
-    public function __construct(
-    ) {}
-
     #[Route(path: '/create', name: 'create')]
     public function create(
         CreatePersonCommandHandler $handler,

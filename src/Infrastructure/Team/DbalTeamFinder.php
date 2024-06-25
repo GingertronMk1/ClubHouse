@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Person;
+namespace App\Infrastructure\Team;
 
-use App\Application\Person\Person;
 use App\Application\Person\PersonFinderInterface;
-use App\Application\User\UserFinderInterface;
+use App\Application\Team\Team;
+use App\Application\Team\TeamFinderInterface;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Person\ValueObject\PersonId;
-use App\Domain\User\ValueObject\UserId;
+use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class DbalPersonFinder implements PersonFinderInterface
+class DbalTeamFinder implements TeamFinderInterface
 {
-    private const TABLE_NAME = 'people';
+    private const TABLE_NAME = 'teams';
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly UserFinderInterface $userFinder,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly PersonFinderInterface $personFinder
     ) {}
 
-    public function getById(PersonId $id): Person
+    public function getById(TeamId $id): Team
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -43,10 +43,7 @@ class DbalPersonFinder implements PersonFinderInterface
         return $this->createFromRow($result);
     }
 
-    /**
-     * @param array<PersonId> $peopleIds
-     */
-    public function getAll(array $peopleIds = []): array
+    public function getAll(array $teamIds = []): array
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -55,10 +52,10 @@ class DbalPersonFinder implements PersonFinderInterface
             ->orderBy('id')
         ;
 
-        foreach ($peopleIds as $personIdIndex => $personIdValue) {
+        foreach ($teamIds as $n => $id) {
             $query
-                ->orWhere("id = :id{$personIdIndex}")
-                ->setParameter("id{$personIdIndex}", (string) $personIdValue)
+                ->orWhere("id = :id{$n}")
+                ->setParameter("id{$n}", (string) $id)
             ;
         }
 
@@ -80,21 +77,35 @@ class DbalPersonFinder implements PersonFinderInterface
     /**
      * @param array<string, mixed> $row
      */
-    private function createFromRow(array $row): Person
+    private function createFromRow(array $row): Team
     {
-        $user = null;
-        if (isset($row['user_id'])) {
-            $user = $this->userFinder->getById(UserId::fromString($row['user_id']));
-        }
         $deletedAt = null;
         if (isset($row['deleted_at'])) {
             $deletedAt = DateTime::fromString($row['deleted_at']);
         }
 
-        return new Person(
-            PersonId::fromString($row['id']),
+        $peopleQuery = $this->connection->createQueryBuilder();
+        $peopleQuery
+            ->select('person_id')
+            ->from('team_people')
+            ->where('team_id = :team_id')
+            ->setParameter('team_id', $row['id'])
+        ;
+        $peopleIds = $peopleQuery->fetchFirstColumn();
+
+        $peopleIds = array_map(fn (string $personId) => PersonId::fromString($personId), $peopleIds);
+
+        $teamPeople = [];
+
+        if (!empty($peopleIds)) {
+            $teamPeople = $this->personFinder->getAll($peopleIds);
+        }
+
+        return new Team(
+            TeamId::fromString($row['id']),
             $row['name'],
-            $user,
+            $row['description'],
+            $teamPeople,
             DateTime::fromString($row['created_at']),
             DateTime::fromString($row['updated_at']),
             $deletedAt
