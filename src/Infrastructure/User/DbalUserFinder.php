@@ -60,6 +60,9 @@ class DbalUserFinder implements UserFinderInterface
         return $returnVal;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     private function createFromRow(array $row): User
     {
         if (!(isset($row['id'], $row['email']))) {

@@ -66,6 +66,9 @@ class DbalPersonFinder implements PersonFinderInterface
         return $returnVal;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     private function createFromRow(array $row): Person
     {
         $user = null;

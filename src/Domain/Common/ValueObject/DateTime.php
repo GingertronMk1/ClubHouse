@@ -33,7 +33,7 @@ class DateTime implements \Stringable
      */
     public function __toString(): string
     {
-        return $this->format(self::FORMAT_SECONDS);
+        return $this->format(self::FORMAT_MICROSECONDS);
     }
 
     /**
@@ -55,6 +55,10 @@ class DateTime implements \Stringable
         };
 
         $dateTimeImmutable = \DateTimeImmutable::createFromFormat($dateFormat, $dateString);
+
+        if (!$dateTimeImmutable) {
+            throw new \InvalidArgumentException("Invalid date string `{$dateString}`.");
+        }
 
         return new self($dateTimeImmutable->format(self::FORMAT_MICROSECONDS));
     }
@@ -79,7 +83,7 @@ class DateTime implements \Stringable
         $length = strlen((string) $timestamp);
 
         switch ($length) {
-            case $length >= 1 && $length <= 10: // seconds
+            case $length <= 10: // seconds
                 $immutable = \DateTimeImmutable::createFromFormat('U', (string) $timestamp);
 
                 break;
@@ -104,6 +108,10 @@ class DateTime implements \Stringable
                 throw new \InvalidArgumentException('Invalid integer format');
         }
 
+        if (!$immutable) {
+            throw new \InvalidArgumentException("Invalid timestamp `{$timestamp}`.");
+        }
+
         return self::fromDateTimeInterface($immutable);
     }
 
@@ -124,8 +132,12 @@ class DateTime implements \Stringable
      */
     public function toDateTimeImmutable(): \DateTimeImmutable
     {
-        // @var \DateTimeImmutable $dateTimeImmutable
-        return \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $this->date);
+        $returnVal = \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $this->date);
+        if (!$returnVal) {
+            throw new \Exception("Invalid date {$this->date}");
+        }
+
+        return $returnVal;
     }
 
     /**
