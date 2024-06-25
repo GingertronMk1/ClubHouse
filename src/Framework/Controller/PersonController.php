@@ -6,12 +6,16 @@ namespace App\Framework\Controller;
 
 use App\Application\Person\Command\CreatePersonCommand;
 use App\Application\Person\CommandHandler\CreatePersonCommandHandler;
+use App\Application\Person\CommandHandler\UpdatePersonCommandHandler;
 use App\Application\Person\PersonFinderInterface;
+use App\Domain\Person\ValueObject\PersonId;
 use App\Framework\Form\Person\CreatePersonFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Application\Person\Command\UpdatePersonCommand;
+use App\Framework\Form\Person\UpdatePersonFormType;
 
 #[Route(path: '/person', name: 'person.')]
 class PersonController extends AbstractController
@@ -53,5 +57,38 @@ class PersonController extends AbstractController
         return $this->render('person/index.html.twig', [
             'people' => $personFinder->getAll(),
         ]);
+    }
+
+
+    #[Route('/update/{personId}', name: 'update')]
+    public function update(
+        UpdatePersonCommandHandler $handler,
+        Request $request,
+        PersonFinderInterface $personFinder,
+        string $personId
+    ): Response
+    {
+        $person = $personFinder->getById(PersonId::fromString($personId));
+
+        $command = UpdatePersonCommand::fromPerson($person);
+        $form = $this->createForm(UpdatePersonFormType::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $handler->handle($command);
+
+                return $this->redirectToRoute('person.index');
+            } catch (\Throwable $e) {
+                throw new \Exception('Error creating person', previous: $e);
+            }
+        }
+
+        return $this->render(
+            'person/create.html.twig',
+            [
+                'form' => $form,
+            ]
+        );
     }
 }
