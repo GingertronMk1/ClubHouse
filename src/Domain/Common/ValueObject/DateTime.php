@@ -124,7 +124,7 @@ class DateTime implements \Stringable
      */
     public function toDateTimeImmutable(): \DateTimeImmutable
     {
-        /** @var \DateTimeImmutable $dateTimeImmutable */
+        // @var \DateTimeImmutable $dateTimeImmutable
         return \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $this->date);
     }
 

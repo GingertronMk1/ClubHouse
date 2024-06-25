@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\Application\Person\Command\CreatePersonCommand;
+use App\Application\Person\Command\UpdatePersonCommand;
 use App\Application\Person\CommandHandler\CreatePersonCommandHandler;
 use App\Application\Person\CommandHandler\UpdatePersonCommandHandler;
 use App\Application\Person\PersonFinderInterface;
 use App\Domain\Person\ValueObject\PersonId;
 use App\Framework\Form\Person\CreatePersonFormType;
+use App\Framework\Form\Person\UpdatePersonFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Application\Person\Command\UpdatePersonCommand;
-use App\Framework\Form\Person\UpdatePersonFormType;
 
 #[Route(path: '/person', name: 'person.')]
 class PersonController extends AbstractController
@@ -59,15 +59,13 @@ class PersonController extends AbstractController
         ]);
     }
 
-
     #[Route('/update/{personId}', name: 'update')]
     public function update(
         UpdatePersonCommandHandler $handler,
         Request $request,
         PersonFinderInterface $personFinder,
         string $personId
-    ): Response
-    {
+    ): Response {
         $person = $personFinder->getById(PersonId::fromString($personId));
 
         $command = UpdatePersonCommand::fromPerson($person);
