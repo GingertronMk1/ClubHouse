@@ -8,6 +8,4 @@ use Symfony\Component\Form\AbstractType;
 
 class CreateTeamFormType extends AbstractType
 {
-    public function __construct(
-    ) {}
 }
