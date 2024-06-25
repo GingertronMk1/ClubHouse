@@ -30,10 +30,22 @@ body {
 .main {
     @include container;
 
+    flex: 1;
+    min-height: 1px;
+
+    display: flex;
+    flex-direction: column;
+
     &__inner {
         padding: 1rem;
+        flex: 1;
+        min-height: 1px;
     }
 }
+
+/**
+ *  Navbar
+ */
 
 .nav {
     display: flex;
@@ -49,5 +61,28 @@ body {
 
     &__login-out-button {
         margin-left: auto;
+    }
+}
+
+/**
+ *  People pages
+ */
+
+.people {
+    &__create-link {
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    &__table {
+        width: 100%;
+
+        th, td {
+            padding: 0.2rem 0.5rem;
+        }
+
+        tr:nth-child(2n) {
+            background-color: white;
+        }
     }
 }

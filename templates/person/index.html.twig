@@ -2,20 +2,19 @@
 
 {% block title %}ClubHouse{% endblock %}
 
+{% block classes %}people{% endblock %}
+
 {% block body %}
     {% set people = people|default([]) %}
 
-    <a href="{{ path('person.create') }}">New</a>
-    <table>
-        <thead>
+    <a class="people__create-link" href="{{ path('person.create') }}">New</a>
+    <table class="people__table">
             <tr>
                 <th>Person Name</th>
                 <th>Person's User Email</th>
                 <th>Created At</th>
                 <th>Last Updated At</th>
             </tr>
-        </thead>
-        <tbody>
     {% for person in people %}
         <tr data-person-id="{{ person.id }}">
             <td>
@@ -28,6 +27,5 @@
             <td>{{ person.updatedAt }}</td>
         </tr>
     {% endfor %}
-        </tbody>
     </table>
 {% endblock %}
