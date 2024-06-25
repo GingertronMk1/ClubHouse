@@ -47,7 +47,7 @@ class MakeNewEntityClassCommand extends Command
             $replacedFileName = preg_replace('/{ENTITY}/', $arg1, $classFileName);
             $replacedFileName = $this->kernel->getProjectDir().'/'.$replacedFileName;
             $fqn = preg_replace(
-                ['/\//', '/^src/'],
+                ['/\//', '/^.*src/'],
                 ['\\', 'App'],
                 $replacedFileName
             );
