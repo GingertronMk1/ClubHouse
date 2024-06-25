@@ -1,3 +1,13 @@
+{% set navLinks = [
+    {
+        'text': 'People',
+        'route': 'person.index'
+    },
+    {
+        'text': 'Teams',
+        'route': 'team.index'
+    }
+] %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -15,19 +25,25 @@
     <body>
         <nav class="nav">
             <div class="nav__inner">
-            {% if app.user %}
-                <span class="nav__user-button">
-                    {{ app.user.email }}
-                </span>
-            {% endif %}
-            <span class="nav__login-out-button">
-                {% if app.user %}
-                    <a href="{{ path('app_logout') }}">Log Out</a>
-                {% else %}
-                    <a href="{{ path('app_login') }}">Log In</a>
-                    <a href="{{ path('app_register') }}">Register</a>
-                {% endif %}
-            </span>
+                <div class="nav__nav-links">
+                    {% for link in navLinks %}
+                    <a href="{{ path(link.route) }}">
+                        {{ link.text }}
+                    </a>
+                    {% endfor %}
+                </div>
+                <div class="nav__account-buttons">
+                    {% if app.user %}
+                        <span class="nav__user-button">
+                            {{ app.user.email }}
+                        </span>
+                        <a href="{{ path('app_logout') }}">Log Out</a>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Log In</a>
+                        <a href="{{ path('app_register') }}">Register</a>
+                    {% endif %}
+                    </span>
+                </div>
             </div>
         </nav>
         <div class="main">
