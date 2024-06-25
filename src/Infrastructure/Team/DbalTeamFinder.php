@@ -52,9 +52,11 @@ class DbalTeamFinder implements TeamFinderInterface
             ->orderBy('id')
         ;
 
-        if (!empty($teamIds)) {
-            $expr = $this->connection->createExpressionBuilder();
-            $query->where($expr->in('id', array_map(fn (TeamId $id) => (string) $id, $teamIds)));
+        foreach ($teamIds as $n => $id) {
+            $query
+                ->orWhere("id = :id{$n}")
+                ->setParameter("id{$n}", (string) $id)
+            ;
         }
 
         $result = $query->fetchAllAssociative();
