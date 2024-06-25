@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240623175038 extends AbstractMigration
+final class Version20240625080245 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,18 +20,21 @@ final class Version20240623175038 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $table = $schema->createTable('users');
+        $table = $schema->createTable('people');
         $table->addColumn(
             'id',
-            'string'
-        );
-        $table->addColumn(
-            'email',
             'string',
         );
         $table->addColumn(
-            'password',
-            'string'
+            'name',
+            'string',
+        );
+        $table->addColumn(
+            'user_id',
+            'string',
+            [
+                'notNull' => false,
+            ]
         );
         $table->addColumn(
             'created_at',
@@ -50,7 +53,7 @@ final class Version20240623175038 extends AbstractMigration
         );
 
         $table->setPrimaryKey(['id']);
-        $table->addUniqueIndex(['email']);
+        $table->addForeignKeyConstraint('users', ['user_id'], ['id']);
     }
 
     public function down(Schema $schema): void

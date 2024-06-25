@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block classes %}people{% endblock %}
+
+{% block body %}
+    {% set people = people|default([]) %}
+
+    <a class="people__create-link" href="{{ path('person.create') }}">New</a>
+    <table class="people__table">
+            <tr>
+                <th>Person Name</th>
+                <th>Person's User Email</th>
+                <th>Created At</th>
+                <th>Last Updated At</th>
+                <th>Actions</th>
+            </tr>
+    {% for person in people %}
+        <tr data-person-id="{{ person.id }}">
+            <td>
+                {{ person.name }}
+            </td>
+            <td>
+                {{ person.user ? person.user.email : 'No user assigned' }}
+            </td>
+            <td>{{ person.createdAt }}</td>
+            <td>{{ person.updatedAt }}</td>
+            <td><a href="{{ path('person.update', {personId: person.id}) }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

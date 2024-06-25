@@ -18,24 +18,4 @@ class User
         public readonly string $email,
         public readonly array $roles,
     ) {}
-
-    /**
-     * Undocumented function.
-     *
-     * @return array<string>
-     */
-    public function getRoles(): array
-    {
-        return $this->roles;
-    }
-
-    public function getUserIdentifier(): string
-    {
-        return (string) $this->id;
-    }
-
-    public function eraseCredentials(): void
-    {
-        // no op
-    }
 }
