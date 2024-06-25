@@ -49,8 +49,7 @@ class PersonController extends AbstractController
     #[Route(path: '/', name: 'index')]
     public function index(
         PersonFinderInterface $personFinder
-    ): Response
-    {
+    ): Response {
         return $this->render('person/index.html.twig', [
             'people' => $personFinder->getAll(),
         ]);

@@ -33,7 +33,7 @@ final class Version20240625080245 extends AbstractMigration
             'user_id',
             'string',
             [
-                'notNull' => false
+                'notNull' => false,
             ]
         );
         $table->addColumn(
@@ -48,7 +48,7 @@ final class Version20240625080245 extends AbstractMigration
             'deleted_at',
             'string',
             [
-                'notNull' => false
+                'notNull' => false,
             ]
         );
 
@@ -59,6 +59,5 @@ final class Version20240625080245 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

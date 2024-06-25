@@ -45,7 +45,7 @@ final class Version20240623175038 extends AbstractMigration
             'deleted_at',
             'string',
             [
-                'notNull' => false
+                'notNull' => false,
             ]
         );
 

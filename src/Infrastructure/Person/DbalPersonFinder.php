@@ -22,9 +22,7 @@ class DbalPersonFinder implements PersonFinderInterface
         private readonly Connection $connection,
         private readonly UserFinderInterface $userFinder,
         private readonly LoggerInterface $logger
-    )
-    {
-    }
+    ) {}
 
     public function getById(PersonId $id): Person
     {
@@ -33,12 +31,13 @@ class DbalPersonFinder implements PersonFinderInterface
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where('id = :id')
-            ->setParameter('id', (string) $id);
+            ->setParameter('id', (string) $id)
+        ;
 
         $result = $query->fetchAssociative();
 
         if (!$result) {
-            throw new NotFoundHttpException("User not found");
+            throw new NotFoundHttpException('User not found');
         }
 
         return $this->createFromRow($result);
@@ -49,15 +48,16 @@ class DbalPersonFinder implements PersonFinderInterface
         $query = $this->connection->createQueryBuilder();
         $query
             ->select('*')
-            ->from(self::TABLE_NAME);
+            ->from(self::TABLE_NAME)
+        ;
 
         $result = $query->fetchAllAssociative();
 
         $returnVal = [];
 
-        foreach($result as $row) {
+        foreach ($result as $row) {
             try {
-                $returnVal[] = $this->createFromRow($row);       
+                $returnVal[] = $this->createFromRow($row);
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
             }

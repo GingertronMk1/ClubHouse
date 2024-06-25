@@ -30,7 +30,7 @@ class CreatePersonFormType extends AbstractType
                     'required' => false,
                     'choices' => $this->userFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'email'
+                    'choice_label' => 'email',
                 ]
             )
             ->add('submit', SubmitType::class)

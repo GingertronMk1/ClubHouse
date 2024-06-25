@@ -6,9 +6,24 @@
     {% set people = people|default([]) %}
 
     <a href="{{ path('person.create') }}">New</a>
-    <ul>
+    <table>
+        <thead>
+            <tr>
+                <th>Person Name</th>
+                <th>Person's User Email</th>
+            </tr>
+        </thead>
+        <tbody>
     {% for person in people %}
-    <li>{{ person.id }}: {{ person.name }} / {{ person.user ? person.user.id : 'No user assigned' }}</li>
+        <tr data-person-id="{{ person.id }}">
+            <td>
+                {{ person.name }}
+            </td>
+            <td>
+                {{ person.user ? person.user.email : 'No user assigned' }}
+            </td>
+        </tr>
     {% endfor %}
-    </ul>
+        </tbody>
+    </table>
 {% endblock %}

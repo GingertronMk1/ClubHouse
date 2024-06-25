@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\Person\Command;
 
 use App\Application\User;
-use App\Domain\User\ValueObject\UserId;
 
 class CreatePersonCommand
 {

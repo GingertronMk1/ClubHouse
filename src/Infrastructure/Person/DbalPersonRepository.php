@@ -49,7 +49,7 @@ class DbalPersonRepository implements PersonRepositoryInterface
                     'id' => (string) $person->id,
                     'name' => $person->name,
                     'user_id' => $person->userId ? (string) $person->userId : null,
-                    'updated_at' => (string) $this->clock->getTime()
+                    'updated_at' => (string) $this->clock->getTime(),
                 ])
             ;
             $updateQuery->executeStatement();

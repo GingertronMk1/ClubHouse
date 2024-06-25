@@ -6,7 +6,6 @@ use App\Application\User;
 use App\Application\User\UserFinderInterface;
 use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
-use Generator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -17,9 +16,7 @@ class DbalUserFinder implements UserFinderInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly LoggerInterface $logger
-    )
-    {
-    }
+    ) {}
 
     public function getById(UserId $id): User
     {
@@ -28,12 +25,13 @@ class DbalUserFinder implements UserFinderInterface
             ->select('*')
             ->from(self::TABLE_NAME)
             ->where('id = :id')
-            ->setParameter('id', (string) $id);
+            ->setParameter('id', (string) $id)
+        ;
 
         $result = $query->fetchAssociative();
 
         if (!$result) {
-            throw new NotFoundHttpException("User not found");
+            throw new NotFoundHttpException('User not found');
         }
 
         return $this->createFromRow($result);
@@ -44,15 +42,16 @@ class DbalUserFinder implements UserFinderInterface
         $query = $this->connection->createQueryBuilder();
         $query
             ->select('*')
-            ->from(self::TABLE_NAME);
+            ->from(self::TABLE_NAME)
+        ;
 
         $result = $query->fetchAllAssociative();
 
         $returnVal = [];
 
-        foreach($result as $row) {
+        foreach ($result as $row) {
             try {
-                $returnVal[] = $this->createFromRow($row);       
+                $returnVal[] = $this->createFromRow($row);
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
             }
@@ -63,7 +62,7 @@ class DbalUserFinder implements UserFinderInterface
 
     private function createFromRow(array $row): User
     {
-        if (!(isset($row['id']) && isset($row['email']))) {
+        if (!(isset($row['id'], $row['email']))) {
             throw new \Exception('Values not set');
         }
 

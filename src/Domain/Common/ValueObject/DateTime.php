@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Domain\Common\ValueObject;
+
 use DateTimeImmutable;
 use DateTimeInterface;
-use InvalidArgumentException;
-use Stringable;
 
-class DateTime implements Stringable
+class DateTime implements \Stringable
 {
     public const FORMAT_SECONDS = 'Y-m-d H:i:s';
     public const FORMAT_MILLISECONDS = 'Y-m-d H:i:s.v';
@@ -18,13 +17,23 @@ class DateTime implements Stringable
     private function __construct(
         string $date
     ) {
-        if (!DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $date)) {
-            throw new InvalidArgumentException(
-                'Invalid date provided: ' . $date . '. Format: ' . self::FORMAT_MICROSECONDS . '.'
+        if (!\DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $date)) {
+            throw new \InvalidArgumentException(
+                'Invalid date provided: '.$date.'. Format: '.self::FORMAT_MICROSECONDS.'.'
             );
         }
 
         $this->date = $date;
+    }
+
+    /**
+     * Get a string representation of this object.
+     *
+     * @return string the date in a string format
+     */
+    public function __toString(): string
+    {
+        return $this->format(self::FORMAT_SECONDS);
     }
 
     /**
@@ -35,20 +44,17 @@ class DateTime implements Stringable
     public static function fromString(string $dateString): self
     {
         $dateFormat = match (true) {
-            DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $dateString) !== false
-                => self::FORMAT_MICROSECONDS,
-            DateTimeImmutable::createFromFormat(self::FORMAT_MILLISECONDS, $dateString) !== false
-                => self::FORMAT_MILLISECONDS,
-            DateTimeImmutable::createFromFormat(self::FORMAT_SECONDS, $dateString) !== false
-                => self::FORMAT_SECONDS,
-            default => throw new InvalidArgumentException(sprintf(
+            false !== \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $dateString) => self::FORMAT_MICROSECONDS,
+            false !== \DateTimeImmutable::createFromFormat(self::FORMAT_MILLISECONDS, $dateString) => self::FORMAT_MILLISECONDS,
+            false !== \DateTimeImmutable::createFromFormat(self::FORMAT_SECONDS, $dateString) => self::FORMAT_SECONDS,
+            default => throw new \InvalidArgumentException(sprintf(
                 'Invalid date provided: %s. Format: %s.',
                 $dateString,
                 self::FORMAT_MICROSECONDS
             )),
         };
 
-        $dateTimeImmutable = DateTimeImmutable::createFromFormat($dateFormat, $dateString);
+        $dateTimeImmutable = \DateTimeImmutable::createFromFormat($dateFormat, $dateString);
 
         return new self($dateTimeImmutable->format(self::FORMAT_MICROSECONDS));
     }
@@ -56,9 +62,9 @@ class DateTime implements Stringable
     /**
      * Create an instance from a DateTimeInterface.
      *
-     * @param DateTimeInterface $dateTime the date
+     * @param \DateTimeInterface $dateTime the date
      */
-    public static function fromDateTimeInterface(DateTimeInterface $dateTime): self
+    public static function fromDateTimeInterface(\DateTimeInterface $dateTime): self
     {
         $dateString = $dateTime->format(self::FORMAT_MICROSECONDS);
 
@@ -74,37 +80,31 @@ class DateTime implements Stringable
 
         switch ($length) {
             case $length >= 1 && $length <= 10: // seconds
-                $immutable = DateTimeImmutable::createFromFormat('U', (string) $timestamp);
+                $immutable = \DateTimeImmutable::createFromFormat('U', (string) $timestamp);
+
                 break;
+
             case 13: // milliseconds
                 $seconds = floor($timestamp / 1000);
                 $fractionalMilliseconds = $timestamp - ($seconds * 1000);
 
-                $immutable = DateTimeImmutable::createFromFormat('U.v', "{$seconds}.{$fractionalMilliseconds}");
+                $immutable = \DateTimeImmutable::createFromFormat('U.v', "{$seconds}.{$fractionalMilliseconds}");
 
                 break;
+
             case 16: // microseconds
                 $seconds = floor($timestamp / 1000000);
                 $fractionalMicroseconds = $timestamp - ($seconds * 1000000);
 
-                $immutable = DateTimeImmutable::createFromFormat('U.u', "{$seconds}.{$fractionalMicroseconds}");
+                $immutable = \DateTimeImmutable::createFromFormat('U.u', "{$seconds}.{$fractionalMicroseconds}");
 
                 break;
+
             default:
-                throw new InvalidArgumentException("Invalid integer format");
+                throw new \InvalidArgumentException('Invalid integer format');
         }
 
         return self::fromDateTimeInterface($immutable);
-    }
-
-    /**
-     * Get a string representation of this object.
-     *
-     * @return string the date in a string format
-     */
-    public function __toString(): string
-    {
-        return $this->format(self::FORMAT_SECONDS);
     }
 
     /**
@@ -120,14 +120,12 @@ class DateTime implements Stringable
     /**
      * Get a DateTimeImmutable version of this object.
      *
-     * @return DateTimeImmutable the date in a DateTimeImmutable format
+     * @return \DateTimeImmutable the date in a DateTimeImmutable format
      */
-    public function toDateTimeImmutable(): DateTimeImmutable
+    public function toDateTimeImmutable(): \DateTimeImmutable
     {
-        /** @var DateTimeImmutable $dateTimeImmutable */
-        $dateTimeImmutable = DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $this->date);
-
-        return $dateTimeImmutable;
+        /** @var \DateTimeImmutable $dateTimeImmutable */
+        return \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $this->date);
     }
 
     /**
@@ -164,7 +162,8 @@ class DateTime implements Stringable
     public function toTimestamp(): int
     {
         return (int) $this->toDateTimeImmutable()
-            ->format('U');
+            ->format('U')
+        ;
     }
 
     /**
@@ -173,6 +172,7 @@ class DateTime implements Stringable
     public function toMicrosecondTimestamp(): int
     {
         return (int) $this->toDateTimeImmutable()
-            ->format('Uu');
+            ->format('Uu')
+        ;
     }
 }

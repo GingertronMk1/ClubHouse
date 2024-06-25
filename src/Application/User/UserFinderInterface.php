@@ -6,7 +6,6 @@ namespace App\Application\User;
 
 use App\Application\User;
 use App\Domain\User\ValueObject\UserId;
-use Generator;
 
 interface UserFinderInterface
 {

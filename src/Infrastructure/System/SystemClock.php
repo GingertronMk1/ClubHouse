@@ -4,16 +4,16 @@ namespace App\Infrastructure\System;
 
 use App\Application\Common\Service\ClockInterface;
 use App\Domain\Common\ValueObject\DateTime;
-use DateTimeImmutable;
 
 class SystemClock implements ClockInterface
 {
     public function getTime(?string $modifier = null): DateTime
     {
-        $initialDateTime = new DateTimeImmutable();
+        $initialDateTime = new \DateTimeImmutable();
         if ($modifier) {
             $initialDateTime = $initialDateTime->modify($modifier);
         }
+
         return DateTime::fromDateTimeInterface($initialDateTime);
     }
 }

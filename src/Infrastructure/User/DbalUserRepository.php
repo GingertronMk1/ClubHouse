@@ -42,7 +42,7 @@ class DbalUserRepository implements UserRepositoryInterface
                     'id' => (string) $user->id,
                     'email' => $user->email,
                     'password' => $hashedPassword,
-                    'now' => $this->clock->getTime()
+                    'now' => $this->clock->getTime(),
                 ])
             ;
             $updateQuery->executeStatement();
@@ -71,7 +71,7 @@ class DbalUserRepository implements UserRepositoryInterface
                     'id' => (string) $user->id,
                     'email' => $user->email,
                     'password' => $hashedPassword,
-                    'now' => $this->clock->getTime()
+                    'now' => $this->clock->getTime(),
                 ])
             ;
             $insertQuery->executeStatement();
