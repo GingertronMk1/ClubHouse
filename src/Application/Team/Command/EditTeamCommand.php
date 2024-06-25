@@ -7,7 +7,5 @@ namespace App\Application\Team\Command;
 class EditTeamCommand
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

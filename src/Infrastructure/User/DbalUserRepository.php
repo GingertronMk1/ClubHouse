@@ -6,13 +6,12 @@ use App\Application\Common\Service\ClockInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
+use App\Infrastructure\Common\AbstractDbalRepository;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class DbalUserRepository implements UserRepositoryInterface
+class DbalUserRepository extends AbstractDbalRepository implements UserRepositoryInterface
 {
-    private const TABLE_NAME = 'users';
-
     public function __construct(
         private readonly Connection $connection,
         private readonly UserPasswordHasherInterface $hasher,
@@ -26,55 +25,17 @@ class DbalUserRepository implements UserRepositoryInterface
 
     public function store(User $user): UserId
     {
-        $existsQuery = $this->connection->createQueryBuilder();
-        $existsQuery->select('*')->from(self::TABLE_NAME)->where('id = :id')->setParameter('id', (string) $user->id);
-
-        $hashedPassword = $this->hasher->hashPassword($user, $user->password);
-        if ($existsQuery->fetchAssociative()) {
-            $updateQuery = $this->connection->createQueryBuilder();
-            $updateQuery
-                ->update(self::TABLE_NAME)
-                ->where('id = :id')
-                ->set('email', ':email')
-                ->set('password', ':password')
-                ->set('updated_at', ':now')
-                ->setParameters([
-                    'id' => (string) $user->id,
-                    'email' => $user->email,
-                    'password' => $hashedPassword,
-                    'now' => $this->clock->getTime(),
-                ])
-            ;
-            $updateQuery->executeStatement();
-        } else {
-            $emailExistsQuery = $this->connection->createQueryBuilder();
-            $emailExistsQuery
-                ->select('*')
-                ->from(self::TABLE_NAME)
-                ->where('email = :email')
-                ->setParameter('email', $user->email)
-            ;
-            if ($emailExistsQuery->fetchAssociative()) {
-                throw new \InvalidArgumentException('User with that email already exists');
-            }
-            $insertQuery = $this->connection->createQueryBuilder();
-            $insertQuery
-                ->insert(self::TABLE_NAME)
-                ->values([
-                    'id' => ':id',
-                    'email' => ':email',
-                    'password' => ':password',
-                    'created_at' => ':now',
-                    'updated_at' => ':now',
-                ])
-                ->setParameters([
-                    'id' => (string) $user->id,
-                    'email' => $user->email,
-                    'password' => $hashedPassword,
-                    'now' => $this->clock->getTime(),
-                ])
-            ;
-            $insertQuery->executeStatement();
+        $storePerson = $this->storeMappedData(
+            entity: $user,
+            connection: $this->connection,
+            tableName: 'users',
+            clock: $this->clock,
+            externalServices: [
+                UserPasswordHasherInterface::class => $this->hasher,
+            ]
+        );
+        if (1 !== $storePerson) {
+            throw new \Exception("Stored {$storePerson} users, when we should have stored just one!");
         }
 
         return $user->id;

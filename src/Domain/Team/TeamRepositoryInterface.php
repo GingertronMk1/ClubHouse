@@ -7,7 +7,5 @@ namespace App\Domain\Team;
 class TeamRepositoryInterface
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

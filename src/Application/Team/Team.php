@@ -7,7 +7,5 @@ namespace App\Application\Team;
 class Team
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

@@ -7,7 +7,5 @@ namespace App\Infrastructure\Team;
 class DbalTeamFinder
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

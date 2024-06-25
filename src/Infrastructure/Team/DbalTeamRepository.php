@@ -7,7 +7,5 @@ namespace App\Infrastructure\Team;
 class DbalTeamRepository
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }

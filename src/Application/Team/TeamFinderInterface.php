@@ -7,7 +7,5 @@ namespace App\Application\Team;
 class TeamFinderInterface
 {
     public function __construct(
-    )
-    {
-    }
+    ) {}
 }
