@@ -12,12 +12,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route(path: '/person', name: 'person.')]
 class PersonController extends AbstractController
 {
     public function __construct(
     ) {}
 
-    #[Route(path: '/register', name: 'app_register')]
+    #[Route(path: '/create', name: 'create')]
     public function create(
         CreatePersonCommandHandler $handler,
         Request $request,
@@ -32,12 +33,12 @@ class PersonController extends AbstractController
 
                 return $this->redirectToRoute('home');
             } catch (\Throwable $e) {
-                throw new \Exception('Error creating user', previous: $e);
+                throw new \Exception('Error creating person', previous: $e);
             }
         }
 
         return $this->render(
-            'security/register.html.twig',
+            'person/create.html.twig',
             [
                 'form' => $form,
             ]
