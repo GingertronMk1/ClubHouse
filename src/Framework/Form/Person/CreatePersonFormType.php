@@ -23,7 +23,7 @@ class CreatePersonFormType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add(
-                'userId',
+                'user',
                 ChoiceType::class,
                 [
                     'placeholder' => 'Optionally assign this Person to a User',

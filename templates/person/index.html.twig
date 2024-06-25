@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block body %}
+    {% set people = people|default([]) %}
+
+    <a href="{{ path('person.create') }}">New</a>
+    <ul>
+    {% for person in people %}
+    <li>{{ person.id }}: {{ person.name }} / {{ person.user ? person.user.id : 'No user assigned' }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

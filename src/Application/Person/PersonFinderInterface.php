@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Person;
 
-class PersonFinderInterface
+use App\Domain\Person\ValueObject\PersonId;
+
+interface PersonFinderInterface
 {
-    public function __construct(
-    ) {}
+    public function getById(PersonId $id): Person;
+
+    /**
+     * @return array<Person>
+     */
+    public function getAll(): array;
 }

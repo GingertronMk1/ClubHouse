@@ -20,7 +20,7 @@ class CreatePersonCommandHandler
         $person = new Person(
             $this->personRepository->generateId(),
             $command->name,
-            $command->userId
+            $command->user?->id
         );
 
         return $this->personRepository->store($person);

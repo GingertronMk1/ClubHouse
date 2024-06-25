@@ -36,7 +36,7 @@ class DbalUserFinder implements UserFinderInterface
             throw new NotFoundHttpException("User not found");
         }
 
-        return $this->makeUserFromRow($result);
+        return $this->createFromRow($result);
     }
 
     public function getAll(): array
@@ -52,7 +52,7 @@ class DbalUserFinder implements UserFinderInterface
 
         foreach($result as $row) {
             try {
-                $returnVal[] = $this->makeUserFromRow($row);       
+                $returnVal[] = $this->createFromRow($row);       
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
             }
@@ -61,7 +61,7 @@ class DbalUserFinder implements UserFinderInterface
         return $returnVal;
     }
 
-    private function makeUserFromRow(array $row): User
+    private function createFromRow(array $row): User
     {
         if (!(isset($row['id']) && isset($row['email']))) {
             throw new \Exception('Values not set');

@@ -6,6 +6,7 @@ namespace App\Framework\Controller;
 
 use App\Application\Person\Command\CreatePersonCommand;
 use App\Application\Person\CommandHandler\CreatePersonCommandHandler;
+use App\Application\Person\PersonFinderInterface;
 use App\Framework\Form\Person\CreatePersonFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,7 @@ class PersonController extends AbstractController
             try {
                 $handler->handle($command);
 
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('person.index');
             } catch (\Throwable $e) {
                 throw new \Exception('Error creating person', previous: $e);
             }
@@ -43,5 +44,15 @@ class PersonController extends AbstractController
                 'form' => $form,
             ]
         );
+    }
+
+    #[Route(path: '/', name: 'index')]
+    public function index(
+        PersonFinderInterface $personFinder
+    ): Response
+    {
+        return $this->render('person/index.html.twig', [
+            'people' => $personFinder->getAll(),
+        ]);
     }
 }
