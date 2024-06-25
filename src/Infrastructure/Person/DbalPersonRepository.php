@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Person;
 
+use App\Application\Common\Service\ClockInterface;
 use App\Domain\Person\Person;
 use App\Domain\Person\PersonRepositoryInterface;
 use App\Domain\Person\ValueObject\PersonId;
@@ -14,7 +15,8 @@ class DbalPersonRepository implements PersonRepositoryInterface
     private const TABLE_NAME = 'people';
 
     public function __construct(
-        private readonly Connection $connection
+        private readonly Connection $connection,
+        private readonly ClockInterface $clock
     ) {}
 
     public function generateId(): PersonId
@@ -42,10 +44,12 @@ class DbalPersonRepository implements PersonRepositoryInterface
                 ->where('id = :id')
                 ->set('name', ':name')
                 ->set('user_id', ':user_id')
+                ->set('updated_at', ':updated_at')
                 ->setParameters([
                     'id' => (string) $person->id,
                     'name' => $person->name,
-                    'user_id' => (string) $person->userId,
+                    'user_id' => $person->userId ? (string) $person->userId : null,
+                    'updated_at' => (string) $this->clock->getTime()
                 ])
             ;
             $updateQuery->executeStatement();
@@ -57,11 +61,14 @@ class DbalPersonRepository implements PersonRepositoryInterface
                     'id' => ':id',
                     'name' => ':name',
                     'user_id' => ':user_id',
+                    'created_at' => ':now',
+                    'updated_at' => ':now',
                 ])
                 ->setParameters([
                     'id' => (string) $person->id,
                     'name' => $person->name,
-                    'user_id' => (string) $person->userId,
+                    'user_id' => $person->userId ? (string) $person->userId : null,
+                    'now' => (string) $this->clock->getTime(),
                 ])
             ;
             $insertQuery->executeStatement();

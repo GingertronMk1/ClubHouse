@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\User;
 
+use App\Application\Common\Service\ClockInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
@@ -15,6 +16,7 @@ class DbalUserRepository implements UserRepositoryInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly UserPasswordHasherInterface $hasher,
+        private readonly ClockInterface $clock
     ) {}
 
     public function generateId(): UserId
@@ -35,10 +37,12 @@ class DbalUserRepository implements UserRepositoryInterface
                 ->where('id = :id')
                 ->set('email', ':email')
                 ->set('password', ':password')
+                ->set('updated_at', ':now')
                 ->setParameters([
                     'id' => (string) $user->id,
                     'email' => $user->email,
                     'password' => $hashedPassword,
+                    'now' => $this->clock->getTime()
                 ])
             ;
             $updateQuery->executeStatement();
@@ -60,11 +64,14 @@ class DbalUserRepository implements UserRepositoryInterface
                     'id' => ':id',
                     'email' => ':email',
                     'password' => ':password',
+                    'created_at' => ':now',
+                    'updated_at' => ':now',
                 ])
                 ->setParameters([
                     'id' => (string) $user->id,
                     'email' => $user->email,
                     'password' => $hashedPassword,
+                    'now' => $this->clock->getTime()
                 ])
             ;
             $insertQuery->executeStatement();
