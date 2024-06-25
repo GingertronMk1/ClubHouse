@@ -33,6 +33,21 @@ final class Version20240623175038 extends AbstractMigration
             'password',
             'string'
         );
+        $table->addColumn(
+            'created_at',
+            'string',
+        );
+        $table->addColumn(
+            'updated_at',
+            'string',
+        );
+        $table->addColumn(
+            'deleted_at',
+            'string',
+            [
+                'notNull' => false
+            ]
+        );
 
         $table->setPrimaryKey(['id']);
         $table->addUniqueIndex(['email']);
