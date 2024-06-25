@@ -13,6 +13,7 @@ class Team
         public readonly TeamId $id,
         public readonly string $name,
         public readonly string $description,
+        public readonly array $people,
         public readonly DateTime $createdAt,
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,

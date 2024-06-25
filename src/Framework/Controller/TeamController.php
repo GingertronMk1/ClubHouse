@@ -9,6 +9,7 @@ use App\Application\Team\Command\UpdateTeamCommand;
 use App\Application\Team\CommandHandler\CreateTeamCommandHandler;
 use App\Application\Team\CommandHandler\UpdateTeamCommandHandler;
 use App\Application\Team\TeamFinderInterface;
+use App\Domain\Team\ValueObject\TeamId;
 use App\Framework\Form\Team\CreateTeamFormType;
 use App\Framework\Form\Team\UpdateTeamFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,7 +33,7 @@ class TeamController extends AbstractController
             try {
                 $handler->handle($command);
 
-                return $this->redirectToRoute('person.index');
+                return $this->redirectToRoute('team.index');
             } catch (\Throwable $e) {
                 throw new \Exception('Error creating person', previous: $e);
             }
@@ -51,16 +52,19 @@ class TeamController extends AbstractController
         TeamFinderInterface $teamFinder
     ): Response {
         return $this->render('team/index.html.twig', [
-            'teams' => $teamFinder->getAll()
+            'teams' => $teamFinder->getAll(),
         ]);
     }
 
-    #[Route(path: '/update', name: 'update')]
+    #[Route(path: '/update/{teamId}', name: 'update')]
     public function update(
         UpdateTeamCommandHandler $handler,
-        Request $request
+        TeamFinderInterface $teamFinder,
+        Request $request,
+        string $teamId,
     ): Response {
-        $command = new UpdateTeamCommand();
+        $team = $teamFinder->getById(TeamId::fromString($teamId));
+        $command = UpdateTeamCommand::fromTeam($team);
         $form = $this->createForm(UpdateTeamFormType::class, $command);
         $form->handleRequest($request);
 
@@ -68,7 +72,7 @@ class TeamController extends AbstractController
             try {
                 $handler->handle($command);
 
-                return $this->redirectToRoute('person.index');
+                return $this->redirectToRoute('team.index');
             } catch (\Throwable $e) {
                 throw new \Exception('Error creating person', previous: $e);
             }
@@ -81,6 +85,4 @@ class TeamController extends AbstractController
             ]
         );
     }
-
-
 }

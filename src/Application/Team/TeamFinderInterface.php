@@ -9,6 +9,7 @@ use App\Domain\Team\ValueObject\TeamId;
 interface TeamFinderInterface
 {
     public function getById(TeamId $id): Team;
+
     /**
      * @return array<Team>
      */

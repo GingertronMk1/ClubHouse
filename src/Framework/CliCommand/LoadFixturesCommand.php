@@ -2,22 +2,17 @@
 
 namespace App\Framework\CliCommand;
 
-use App\Domain\Common\ValueObject\AbstractUuidId;
 use App\Domain\Person\Person;
 use App\Domain\Person\PersonRepositoryInterface;
 use App\Domain\Team\Team;
 use App\Domain\Team\TeamRepositoryInterface;
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 #[AsCommand(
     name: 'app:load-fixtures',
@@ -33,9 +28,7 @@ class LoadFixturesCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
-    {
-    }
+    protected function configure(): void {}
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -45,7 +38,7 @@ class LoadFixturesCommand extends Command
             $user = new User(
                 $this->userRepositoryInterface->generateId(),
                 "testUser{$value}@clubhouse.test",
-                "12345",
+                '12345',
                 []
             );
             $userId = $this->userRepositoryInterface->store($user);

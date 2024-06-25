@@ -12,18 +12,16 @@
             <tr>
                 <th>Team Name</th>
                 <th>Description</th>
+                <th>People</th>
                 <th>Created At</th>
                 <th>Last Updated At</th>
                 <th>Actions</th>
             </tr>
     {% for team in teams %}
         <tr data-team-id="{{ team.id }}">
-            <td>
-                {{ team.name }}
-            </td>
-            <td>
-                {{ team.description }}
-            </td>
+            <td>{{ team.name }}</td>
+            <td>{{ team.description }}</td>
+            <td>{{ team.people|map(p => p.name)|join(', ') }}</td>
             <td>{{ team.createdAt }}</td>
             <td>{{ team.updatedAt }}</td>
             <td><a href="{{ path('team.update', {teamId: team.id}) }}">Edit</a></td>
