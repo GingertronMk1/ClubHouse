@@ -53,10 +53,11 @@ class DbalPersonFinder implements PersonFinderInterface
         ;
 
         if (!empty($peopleIds)) {
-            foreach($peopleIds as $personIdIndex => $personIdValue) {
+            foreach ($peopleIds as $personIdIndex => $personIdValue) {
                 $query
                     ->orWhere("id = :id{$personIdIndex}")
-                    ->setParameter("id{$personIdIndex}", (string) $personIdValue);
+                    ->setParameter("id{$personIdIndex}", (string) $personIdValue)
+                ;
             }
         }
 

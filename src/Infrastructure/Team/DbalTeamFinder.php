@@ -87,7 +87,8 @@ class DbalTeamFinder implements TeamFinderInterface
             ->select('person_id')
             ->from('team_people')
             ->where('team_id = :team_id')
-            ->setParameter('team_id', $row['id']);
+            ->setParameter('team_id', $row['id'])
+        ;
         $peopleIds = $peopleQuery->fetchFirstColumn();
 
         $peopleIds = array_map(fn (string $personId) => PersonId::fromString($personId), $peopleIds);
@@ -97,6 +98,7 @@ class DbalTeamFinder implements TeamFinderInterface
         if (!empty($peopleIds)) {
             $teamPeople = $this->personFinder->getAll($peopleIds);
         }
+
         return new Team(
             TeamId::fromString($row['id']),
             $row['name'],

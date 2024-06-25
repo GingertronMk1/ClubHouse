@@ -41,10 +41,11 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
 
         $removeQuery = $this->connection->createQueryBuilder();
         $removeQuery
-            ->delete('team_people');
+            ->delete('team_people')
+        ;
 
-        foreach($team->peopleIds as $n => $personId) {
-            match($this->associateUser($team->id, $personId)) {
+        foreach ($team->peopleIds as $n => $personId) {
+            match ($this->associateUser($team->id, $personId)) {
                 -1 => $this->logger->error("Person {$personId} is already associated with team {$team->id}"),
                 0 => $this->logger->error("There was an error associating person {$personId} with team {$team->id}"),
                 default => null
@@ -52,7 +53,8 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
 
             $removeQuery
                 ->andWhere("person_id <> :person_id_{$n}")
-                ->setParameter("person_id_{$n}", (string) $personId);
+                ->setParameter("person_id_{$n}", (string) $personId)
+            ;
         }
 
         $removeQuery->executeStatement();
@@ -70,7 +72,8 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
             ->setParameters([
                 'person_id' => (string) $personId,
                 'team_id' => (string) $teamId,
-            ]);
+            ])
+        ;
         if (empty($checkQuery->fetchAllAssociative())) {
             $createQuery = $this->connection->createQueryBuilder();
             $createQuery
@@ -79,15 +82,15 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
                     'person_id' => ':person_id',
                     'team_id' => ':team_id',
                 ])
-            ->setParameters([
-                'person_id' => (string) $personId,
-                'team_id' => (string) $teamId,
-            ]);
+                ->setParameters([
+                    'person_id' => (string) $personId,
+                    'team_id' => (string) $teamId,
+                ])
+            ;
+
             return (int) $createQuery->executeStatement();
         }
 
         return -1;
     }
-
-
 }
