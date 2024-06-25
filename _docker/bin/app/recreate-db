@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+source .env
+
+./_docker/bin/app/console doctrine:database:drop --force \
+    && ./_docker/bin/app/console doctrine:database:create \
+    && ./_docker/bin/app/console doctrine:migrations:migrate -n
