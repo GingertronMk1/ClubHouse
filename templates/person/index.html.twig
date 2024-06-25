@@ -11,6 +11,8 @@
             <tr>
                 <th>Person Name</th>
                 <th>Person's User Email</th>
+                <th>Created At</th>
+                <th>Last Updated At</th>
             </tr>
         </thead>
         <tbody>
@@ -22,6 +24,8 @@
             <td>
                 {{ person.user ? person.user.email : 'No user assigned' }}
             </td>
+            <td>{{ person.createdAt }}</td>
+            <td>{{ person.updatedAt }}</td>
         </tr>
     {% endfor %}
         </tbody>
