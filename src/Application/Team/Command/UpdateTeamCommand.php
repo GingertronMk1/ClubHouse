@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Team\Command;
 
-class EditTeamCommand
+class UpdateTeamCommand
 {
     public function __construct(
     ) {}

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Framework\Command;
+namespace App\Framework\CliCommand;
 
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;

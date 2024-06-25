@@ -4,8 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\Team;
 
-class TeamFinderInterface
+use App\Domain\Team\ValueObject\TeamId;
+
+interface TeamFinderInterface
 {
-    public function __construct(
-    ) {}
+    public function getById(TeamId $id): Team;
+    /**
+     * @return array<Team>
+     */
+    public function getAll(): array;
 }

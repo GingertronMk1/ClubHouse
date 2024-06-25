@@ -6,7 +6,7 @@ namespace App\Framework\Form\Team;
 
 use Symfony\Component\Form\AbstractType;
 
-class EditTeamFormType extends AbstractType
+class UpdateTeamFormType extends AbstractType
 {
     public function __construct(
     ) {}

@@ -10,26 +10,24 @@
     <a class="people__create-link" href="{{ path('team.create') }}">New</a>
     <table class="people__table">
             <tr>
-                <th>Person Name</th>
-                <th>Person's User Email</th>
+                <th>Team Name</th>
+                <th>Description</th>
                 <th>Created At</th>
                 <th>Last Updated At</th>
                 <th>Actions</th>
             </tr>
-            {#
-    {% for person in people %}
-        <tr data-person-id="{{ person.id }}">
+    {% for team in teams %}
+        <tr data-team-id="{{ team.id }}">
             <td>
-                {{ person.name }}
+                {{ team.name }}
             </td>
             <td>
-                {{ person.user ? person.user.email : 'No user assigned' }}
+                {{ team.description }}
             </td>
-            <td>{{ person.createdAt }}</td>
-            <td>{{ person.updatedAt }}</td>
-            <td><a href="{{ path('person.update', {personId: person.id}) }}">Edit</a></td>
+            <td>{{ team.createdAt }}</td>
+            <td>{{ team.updatedAt }}</td>
+            <td><a href="{{ path('team.update', {teamId: team.id}) }}">Edit</a></td>
         </tr>
     {% endfor %}
-    #}
     </table>
 {% endblock %}
