@@ -11,6 +11,9 @@ use Doctrine\DBAL\Connection;
 abstract class AbstractDbalRepository
 {
     /**
+     * Store any given mapped entity
+     * 
+     * @param string|array<string> $idColumn
      * @param array<string, mixed> $externalServices
      */
     protected function storeMappedData(
@@ -18,27 +21,38 @@ abstract class AbstractDbalRepository
         Connection $connection,
         string $tableName,
         ?ClockInterface $clock = null,
-        string $idColumn = 'id',
+        string|array $idColumn = 'id',
         array $externalServices = []
     ): int {
+        if (is_string($idColumn)) {
+            $idColumn = [$idColumn];
+        }
+
+        // Having defined the column that identifies it, we first check to see if the thing exists already.
+        // If it does, update, otherwise insert
         $entityMappedData = $entity->getMappedData($externalServices);
         $existsQuery = $connection->createQueryBuilder();
         $existsQuery
             ->select('*')
             ->from($tableName)
-            ->where("{$idColumn} = :id")
-            ->setParameter(
-                'id',
-                $entityMappedData[$idColumn]
-            )
         ;
+        foreach($idColumn as $colKey => $col) {
+            $existsQuery
+                ->andWhere("{$col} = :id{$colKey}")
+                ->setParameter("id{$colKey}", $entityMappedData[$col]);
+        }
 
         $storeQuery = $connection->createQueryBuilder();
         if ($existsQuery->fetchAssociative()) {
             $storeQuery
                 ->update($tableName)
-                ->where("{$idColumn} = :id")
             ;
+            foreach($idColumn as $colKey => $col) {
+                $storeQuery
+                    ->andWhere("{$col} = :id{$colKey}")
+                    ->setParameter("id{$colKey}", $entityMappedData[$col]);
+            }
+
             foreach ($entityMappedData as $column => $value) {
                 $storeQuery
                     ->set($column, ":{$column}")
@@ -48,7 +62,6 @@ abstract class AbstractDbalRepository
             if ($clock) {
                 $storeQuery
                     ->set('updated_at', ':now')
-                    ->setParameter('now', $clock->getTime())
                 ;
             }
         } else {
@@ -65,9 +78,11 @@ abstract class AbstractDbalRepository
                 $storeQuery
                     ->setValue('created_at', ':now')
                     ->setValue('updated_at', ':now')
-                    ->setParameter('now', $clock->getTime())
                 ;
             }
+        }
+        if ($clock) {
+            $storeQuery->setParameter('now', (string) $clock->getTime());
         }
 
         return (int) $storeQuery->executeStatement();

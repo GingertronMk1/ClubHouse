@@ -3,6 +3,7 @@
 namespace App\Framework\CliCommand;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
+use App\Infrastructure\Common\AbstractDbalRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -73,10 +74,15 @@ class MakeNewEntityClassCommand extends Command
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
-            $extends = '';
+            $extendsImplements = '';
             if (isset($information['extends'])) {
-                $extends = " extends \\{$information['extends']}";
+                $extendsImplements .= " extends \\{$information['extends']}";
             }
+
+            if (isset($information['implements'])) {
+                $extendsImplements .= " implements \\{$information['implements']}";
+            }
+
 
             try {
                 $io->info("Creating `{$dir}`");
@@ -97,7 +103,7 @@ class MakeNewEntityClassCommand extends Command
 
             namespace {$nameSpace};
 
-            class {$className}{$extends}
+            class {$className}{$extendsImplements}
             {
                 public function __construct(
                 )
@@ -131,7 +137,9 @@ class MakeNewEntityClassCommand extends Command
             'src/Application/{ENTITY}/{ENTITY}FinderInterface' => null,
             'src/Application/{ENTITY}/{ENTITY}' => null,
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => null,
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => null,
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
+                'extends' => AbstractDbalRepository::class,
+            ],
             'src/Framework/Controller/{ENTITY}Controller' => [
                 'extends' => AbstractController::class,
             ],
