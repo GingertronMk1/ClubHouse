@@ -6,6 +6,8 @@ namespace App\Infrastructure\Match;
 
 use App\Application\Match\MatchFinderInterface;
 use App\Application\Match\MatchModel;
+use App\Application\Sport\SportFinderInterface;
+use App\Application\Team\TeamFinderInterface;
 use App\Domain\Match\ValueObject\MatchId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -18,6 +20,8 @@ class DbalMatchFinder implements MatchFinderInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
+        private readonly SportFinderInterface $sportFinder,
+        private readonly TeamFinderInterface $teamFinder,
     ) {}
 
     public function getById(MatchId $id): MatchModel
@@ -36,7 +40,13 @@ class DbalMatchFinder implements MatchFinderInterface
             throw new NotFoundHttpException('Match not found');
         }
 
-        return MatchModel::createFromRow($result);
+        return MatchModel::createFromRow(
+            $result,
+            [
+                SportFinderInterface::class => $this->sportFinder,
+                TeamFinderInterface::class => $this->teamFinder
+            ]
+        );
     }
 
     public function getAll(array $ids = []): array
@@ -61,7 +71,11 @@ class DbalMatchFinder implements MatchFinderInterface
 
         foreach ($result as $row) {
             try {
-                $returnVal[] = MatchModel::createFromRow($row);
+                $returnVal[] = MatchModel::createFromRow(            $row,
+            [
+                SportFinderInterface::class => $this->sportFinder,
+                TeamFinderInterface::class => $this->teamFinder
+            ]);
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
             }

@@ -23,7 +23,10 @@ class MatchModel extends AbstractMappedModel
         public readonly ?DateTime $start,
         public readonly ?TeamModel $team1,
         public readonly ?TeamModel $team2,
-        public readonly ?SportModel $sport
+        public readonly ?SportModel $sport,
+        public readonly DateTime $createdAt,
+        public readonly DateTime $updatedAt,
+        public readonly ?DateTime $deletedAt,
     ) {}
 
     public static function createFromRow(array $row, array $externalServices = []): self
@@ -67,7 +70,10 @@ class MatchModel extends AbstractMappedModel
             isset($row['start']) ? DateTime::fromString($row['start']) : null,
             $team1,
             $team2,
-            $sport
+            $sport,
+            DateTime::fromString($row['created_at']),
+            DateTime::fromString($row['updated_at']),
+            isset($row['deleted_at']) ? DateTime::fromString($row['deleted_at']) : null,
         );
     }
 }
