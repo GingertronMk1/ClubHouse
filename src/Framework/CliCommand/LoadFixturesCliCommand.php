@@ -60,10 +60,9 @@ class LoadFixturesCliCommand extends Command
                 []
             );
             $teamId = $this->teamRepositoryInterface->store($team);
-
         }
 
-        foreach($this->getSports() as $sportName => $sportDescription) {
+        foreach ($this->getSports() as $sportName => $sportDescription) {
             $sport = new SportEntity(
                 $this->sportRepository->generateId(),
                 $sportName,
