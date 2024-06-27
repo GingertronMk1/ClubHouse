@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Domain\Sport;
 
-class SportRepositoryInterface
+use App\Domain\Sport\ValueObject\SportId;
+
+interface SportRepositoryInterface
 {
-    public function __construct(
-    ) {}
+    public function generateId(): SportId;
+    public function store(SportEntity $sport): SportId;
 }

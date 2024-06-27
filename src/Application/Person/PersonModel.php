@@ -36,10 +36,6 @@ class PersonModel extends AbstractMappedModel
         if (isset($row['user_id'])) {
             $user = $userFinder->getById(UserId::fromString($row['user_id']));
         }
-        $deletedAt = null;
-        if (isset($row['deleted_at'])) {
-            $deletedAt = DateTime::fromString($row['deleted_at']);
-        }
 
         return new PersonModel(
             PersonId::fromString($row['id']),
@@ -47,7 +43,7 @@ class PersonModel extends AbstractMappedModel
             $user,
             DateTime::fromString($row['created_at']),
             DateTime::fromString($row['updated_at']),
-            $deletedAt
+            isset($row['deleted_at']) ? DateTime::fromString($row['deleted_at']) : null
         );
     }
 }
