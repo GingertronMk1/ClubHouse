@@ -22,7 +22,7 @@ class CreateMatchCommandHandler
             $this->matchRepository->generateId(),
             $command->name,
             $command->details,
-            DateTime::fromDateTimeInterface($command->start),
+            $command->start ? DateTime::fromDateTimeInterface($command->start) : null,
             $command->team1?->id,
             $command->team2?->id,
             $command->sport?->id,

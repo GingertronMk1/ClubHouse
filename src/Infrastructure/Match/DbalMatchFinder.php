@@ -44,7 +44,7 @@ class DbalMatchFinder implements MatchFinderInterface
             $result,
             [
                 SportFinderInterface::class => $this->sportFinder,
-                TeamFinderInterface::class => $this->teamFinder
+                TeamFinderInterface::class => $this->teamFinder,
             ]
         );
     }
@@ -71,11 +71,13 @@ class DbalMatchFinder implements MatchFinderInterface
 
         foreach ($result as $row) {
             try {
-                $returnVal[] = MatchModel::createFromRow(            $row,
-            [
-                SportFinderInterface::class => $this->sportFinder,
-                TeamFinderInterface::class => $this->teamFinder
-            ]);
+                $returnVal[] = MatchModel::createFromRow(
+                    $row,
+                    [
+                        SportFinderInterface::class => $this->sportFinder,
+                        TeamFinderInterface::class => $this->teamFinder,
+                    ]
+                );
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
             }

@@ -35,7 +35,7 @@ class CreateMatchFormType extends AbstractType
                     'required' => false,
                     'choices' => $this->teamFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
             )
             ->add(
@@ -46,7 +46,7 @@ class CreateMatchFormType extends AbstractType
                     'required' => false,
                     'choices' => $this->teamFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
             )
             ->add(
@@ -57,13 +57,13 @@ class CreateMatchFormType extends AbstractType
                     'required' => false,
                     'choices' => $this->sportFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
             )
             ->add(
                 'submit',
                 SubmitType::class
             )
-            ;
+        ;
     }
 }

@@ -6,8 +6,6 @@ namespace App\Application\Match\Command;
 
 use App\Application\Sport\SportModel;
 use App\Application\Team\TeamModel;
-use App\Domain\Common\ValueObject\DateTime;
-use App\Domain\Team\ValueObject\TeamId;
 
 class CreateMatchCommand
 {
