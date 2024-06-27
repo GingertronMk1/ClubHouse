@@ -26,6 +26,7 @@ class MakeNewEntityClassCommand extends Command
     private const INFORMATION_ATTRIBUTES_STRING = 'attributes';
     private const INFORMATION_IMPLEMENTS_STRING = 'implements';
     private const INFORMATION_EXTENDS_STRING = 'extends';
+    private const INFORMATION_TYPE_STRING = 'type';
 
     private const NAME_ARG = 'className';
 
@@ -100,6 +101,8 @@ class MakeNewEntityClassCommand extends Command
 
             $attributes = implode(PHP_EOL, $attributes);
 
+            $type = $information[self::INFORMATION_TYPE_STRING] ?? 'class';
+
             try {
                 $io->info("Creating `{$dir}`");
                 mkdir($dir, recursive: true);
@@ -119,7 +122,7 @@ class MakeNewEntityClassCommand extends Command
 
             namespace {$nameSpace};
 
-            class {$className}{$extendsImplements}
+            {$type} {$className}{$extendsImplements}
             {
                 public function __construct(
                     {$attributes}
@@ -145,7 +148,9 @@ class MakeNewEntityClassCommand extends Command
             'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => [
                 self::INFORMATION_EXTENDS_STRING => AbstractUuidId::class,
             ],
-            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => null,
+            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => [
+                self::INFORMATION_TYPE_STRING => 'interface',
+            ],
             'src/Domain/{ENTITY}/{ENTITY}Entity' => [
                 self::INFORMATION_EXTENDS_STRING => AbstractMappedEntity::class,
             ],
@@ -153,7 +158,9 @@ class MakeNewEntityClassCommand extends Command
             'src/Application/{ENTITY}/Command/Edit{ENTITY}Command' => null,
             'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
             'src/Application/{ENTITY}/CommandHandler/Edit{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => null,
+            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => [
+                self::INFORMATION_TYPE_STRING => 'interface',
+            ],
             'src/Application/{ENTITY}/{ENTITY}Model' => [
                 self::INFORMATION_EXTENDS_STRING => AbstractMappedModel::class,
             ],
