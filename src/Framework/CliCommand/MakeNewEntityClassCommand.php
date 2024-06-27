@@ -3,6 +3,7 @@
 namespace App\Framework\CliCommand;
 
 use App\Application\Common\AbstractMappedModel;
+use App\Application\Common\Service\ClockInterface;
 use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Common\ValueObject\AbstractUuidId;
 use App\Infrastructure\Common\AbstractDbalRepository;
@@ -173,6 +174,7 @@ class MakeNewEntityClassCommand extends Command
                 self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
                 self::INFORMATION_ATTRIBUTES_STRING => [
                     Connection::class => 'private readonly',
+                    ClockInterface::class => 'private readonly'
                 ],
             ],
             'src/Framework/Controller/{ENTITY}Controller' => [
