@@ -93,7 +93,7 @@ class MakeNewEntityClassCommand extends Command
             $attributes = [];
             if (isset($information[self::INFORMATION_ATTRIBUTES_STRING])) {
                 foreach ($information[self::INFORMATION_ATTRIBUTES_STRING] as $attrClass => $attrModifiers) {
-                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\')+1));
+                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\') + 1));
                     $attributes[] = "{$attrModifiers} \\{$attrClass} \${$attrName},";
                 }
             }
@@ -159,14 +159,14 @@ class MakeNewEntityClassCommand extends Command
             ],
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => [
                 self::INFORMATION_ATTRIBUTES_STRING => [
-                    Connection::class => 'private readonly'
-                ]
+                    Connection::class => 'private readonly',
+                ],
             ],
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
                 self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
                 self::INFORMATION_ATTRIBUTES_STRING => [
-                    Connection::class => 'private readonly'
-                ]
+                    Connection::class => 'private readonly',
+                ],
             ],
             'src/Framework/Controller/{ENTITY}Controller' => [
                 self::INFORMATION_EXTENDS_STRING => AbstractController::class,
