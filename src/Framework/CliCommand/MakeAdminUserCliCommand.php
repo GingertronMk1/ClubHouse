@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:make-admin-user',
     description: 'Create an admin user with a default username and password',
 )]
-class MakeAdminUserCommand extends Command
+class MakeAdminUserCliCommand extends Command
 {
     private const ADMIN_EMAIL = 'test@clubhouse.test';
     private const ADMIN_PASSWORD = '12345';

@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
     name: 'app:make-new-entity-class',
     description: 'Add a short description for your command',
 )]
-class MakeNewEntityClassCommand extends Command
+class MakeNewEntityClassCliCommand extends Command
 {
     private const INFORMATION_ATTRIBUTES_STRING = 'attributes';
     private const INFORMATION_IMPLEMENTS_STRING = 'implements';
