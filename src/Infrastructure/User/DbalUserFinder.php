@@ -65,14 +65,6 @@ class DbalUserFinder implements UserFinderInterface
      */
     private function createFromRow(array $row): UserModel
     {
-        if (!(isset($row['id'], $row['email']))) {
-            throw new \Exception('Values not set');
-        }
-
-        return new UserModel(
-            UserId::fromString($row['id']),
-            $row['email'],
-            []
-        );
+        return UserModel::createFromRow($row);
     }
 }

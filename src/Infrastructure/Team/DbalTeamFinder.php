@@ -7,8 +7,6 @@ namespace App\Infrastructure\Team;
 use App\Application\Person\PersonFinderInterface;
 use App\Application\Team\TeamFinderInterface;
 use App\Application\Team\TeamModel;
-use App\Domain\Common\ValueObject\DateTime;
-use App\Domain\Person\ValueObject\PersonId;
 use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -79,36 +77,8 @@ class DbalTeamFinder implements TeamFinderInterface
      */
     private function createFromRow(array $row): TeamModel
     {
-        $deletedAt = null;
-        if (isset($row['deleted_at'])) {
-            $deletedAt = DateTime::fromString($row['deleted_at']);
-        }
-
-        $peopleQuery = $this->connection->createQueryBuilder();
-        $peopleQuery
-            ->select('person_id')
-            ->from('team_people')
-            ->where('team_id = :team_id')
-            ->setParameter('team_id', $row['id'])
-        ;
-        $peopleIds = $peopleQuery->fetchFirstColumn();
-
-        $peopleIds = array_map(fn (string $personId) => PersonId::fromString($personId), $peopleIds);
-
-        $teamPeople = [];
-
-        if (!empty($peopleIds)) {
-            $teamPeople = $this->personFinder->getAll($peopleIds);
-        }
-
-        return new TeamModel(
-            TeamId::fromString($row['id']),
-            $row['name'],
-            $row['description'],
-            $teamPeople,
-            DateTime::fromString($row['created_at']),
-            DateTime::fromString($row['updated_at']),
-            $deletedAt
-        );
+        return TeamModel::createFromRow($row, [
+            PersonFinderInterface::class => $this->personFinder,
+        ]);
     }
 }

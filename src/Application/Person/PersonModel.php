@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Person;
 
+use App\Application\Common\AbstractMappedModel;
+use App\Application\User\UserFinderInterface;
 use App\Application\User\UserModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Person\ValueObject\PersonId;
+use App\Domain\User\ValueObject\UserId;
 
-class PersonModel
+class PersonModel extends AbstractMappedModel
 {
     public function __construct(
         public readonly PersonId $id,
@@ -18,4 +21,33 @@ class PersonModel
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,
     ) {}
+
+    public static function createFromRow(array $row, array $externalServices = []): self
+    {
+        self::checkServicesExist(
+            $externalServices,
+            [UserFinderInterface::class],
+        );
+
+        /** @var UserFinderInterface */
+        $userFinder = $externalServices[UserFinderInterface::class];
+
+        $user = null;
+        if (isset($row['user_id'])) {
+            $user = $userFinder->getById(UserId::fromString($row['user_id']));
+        }
+        $deletedAt = null;
+        if (isset($row['deleted_at'])) {
+            $deletedAt = DateTime::fromString($row['deleted_at']);
+        }
+
+        return new PersonModel(
+            PersonId::fromString($row['id']),
+            $row['name'],
+            $user,
+            DateTime::fromString($row['created_at']),
+            DateTime::fromString($row['updated_at']),
+            $deletedAt
+        );
+    }
 }
