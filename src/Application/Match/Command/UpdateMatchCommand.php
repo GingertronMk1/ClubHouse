@@ -16,7 +16,7 @@ class UpdateMatchCommand
         public readonly MatchId $id,
         public readonly string $name,
         public readonly ?string $details,
-        public readonly ?DateTime $start,
+        public readonly ?\DateTimeImmutable $start,
         public readonly ?TeamId $team1Id,
         public readonly ?TeamId $team2Id,
         public readonly ?SportId $sportId
@@ -28,7 +28,7 @@ class UpdateMatchCommand
             $match->id,
             $match->name,
             $match->details,
-            $match->start,
+            $match->start?->toDateTimeImmutable(),
             $match->team1?->id,
             $match->team2?->id,
             $match->sport?->id

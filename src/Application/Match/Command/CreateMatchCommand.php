@@ -12,7 +12,7 @@ class CreateMatchCommand
     public function __construct(
         public string $name = '',
         public ?string $details = null,
-        public ?\DateTime $start = null,
+        public ?\DateTimeImmutable $start = null,
         public ?TeamModel $team1 = null,
         public ?TeamModel $team2 = null,
         public ?SportModel $sport = null
