@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Match\CommandHandler;
 
 use App\Application\Match\Command\UpdateMatchCommand;
+use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Match\MatchEntity;
 use App\Domain\Match\MatchRepositoryInterface;
 use App\Domain\Match\ValueObject\MatchId;
@@ -21,10 +22,10 @@ class UpdateMatchCommandHandler
             $command->id,
             $command->name,
             $command->details,
-            $command->start,
-            $command->team1Id,
-            $command->team2Id,
-            $command->sportId
+            $command->start ? DateTime::fromDateTimeInterface($command->start) : null,
+            $command->team1?->id,
+            $command->team2?->id,
+            $command->sport?->id
         );
 
         return $this->matchRepository->store($matchEntity);

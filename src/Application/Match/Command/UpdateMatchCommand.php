@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace App\Application\Match\Command;
 
 use App\Application\Match\MatchModel;
-use App\Domain\Common\ValueObject\DateTime;
+use App\Application\Sport\SportModel;
+use App\Application\Team\TeamModel;
 use App\Domain\Match\ValueObject\MatchId;
-use App\Domain\Sport\ValueObject\SportId;
-use App\Domain\Team\ValueObject\TeamId;
 
 class UpdateMatchCommand
 {
     private function __construct(
-        public readonly MatchId $id,
-        public readonly string $name,
-        public readonly ?string $details,
-        public readonly ?\DateTimeImmutable $start,
-        public readonly ?TeamId $team1Id,
-        public readonly ?TeamId $team2Id,
-        public readonly ?SportId $sportId
+        public MatchId $id,
+        public string $name,
+        public ?string $details,
+        public ?\DateTimeImmutable $start,
+        public ?TeamModel $team1,
+        public ?TeamModel $team2,
+        public ?SportModel $sport
     ) {}
 
     public static function fromModel(MatchModel $match): self
@@ -29,9 +28,9 @@ class UpdateMatchCommand
             $match->name,
             $match->details,
             $match->start?->toDateTimeImmutable(),
-            $match->team1?->id,
-            $match->team2?->id,
-            $match->sport?->id
+            $match->team1,
+            $match->team2,
+            $match->sport
         );
     }
 }
