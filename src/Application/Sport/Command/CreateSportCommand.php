@@ -7,5 +7,7 @@ namespace App\Application\Sport\Command;
 class CreateSportCommand
 {
     public function __construct(
+        public string $name = '',
+        public ?string $description = null,
     ) {}
 }

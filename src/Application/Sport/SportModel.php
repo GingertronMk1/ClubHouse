@@ -13,7 +13,7 @@ class SportModel extends AbstractMappedModel
     public function __construct(
         public readonly SportId $id,
         public readonly string $name,
-        public readonly string $description,
+        public readonly ?string $description,
         public readonly DateTime $createdAt,
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,

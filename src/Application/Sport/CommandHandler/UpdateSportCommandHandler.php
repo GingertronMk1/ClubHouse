@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Sport\Command;
+namespace App\Application\Sport\CommandHandler;
 
-class EditSportCommand
+class UpdateSportCommandHandler
 {
     public function __construct(
     ) {}

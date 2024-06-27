@@ -8,6 +8,4 @@ use App\Domain\Common\ValueObject\AbstractUuidId;
 
 class SportId extends AbstractUuidId
 {
-    public function __construct(
-    ) {}
 }

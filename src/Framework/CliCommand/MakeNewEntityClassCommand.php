@@ -156,9 +156,9 @@ class MakeNewEntityClassCommand extends Command
                 self::INFORMATION_EXTENDS_STRING => AbstractMappedEntity::class,
             ],
             'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/Command/Edit{ENTITY}Command' => null,
+            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => null,
             'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/CommandHandler/Edit{ENTITY}CommandHandler' => null,
+            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => null,
             'src/Application/{ENTITY}/{ENTITY}FinderInterface' => [
                 self::INFORMATION_TYPE_STRING => 'interface',
             ],
