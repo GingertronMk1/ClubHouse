@@ -6,6 +6,4 @@ namespace App\Domain\Sport\ValueObject;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
 
-class SportId extends AbstractUuidId
-{
-}
+class SportId extends AbstractUuidId {}

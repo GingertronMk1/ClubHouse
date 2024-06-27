@@ -36,6 +36,5 @@ class DbalSportRepository extends AbstractDbalRepository implements SportReposit
         }
 
         return $sport->id;
-
     }
 }

@@ -12,6 +12,7 @@ interface SportFinderInterface
 
     /**
      * @param array<SportId> $sportIds
+     *
      * @return array<SportModel>
      */
     public function getAll(array $sportIds = []): array;

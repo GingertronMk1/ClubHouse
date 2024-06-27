@@ -9,5 +9,6 @@ use App\Domain\Sport\ValueObject\SportId;
 interface SportRepositoryInterface
 {
     public function generateId(): SportId;
+
     public function store(SportEntity $sport): SportId;
 }

@@ -20,7 +20,7 @@ class SportEntity extends AbstractMappedEntity
         return [
             'id' => (string) $this->id,
             'name' => $this->name,
-            'description' => $this->description
+            'description' => $this->description,
         ];
     }
 }

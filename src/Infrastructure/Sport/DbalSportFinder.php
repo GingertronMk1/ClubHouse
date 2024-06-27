@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Sport;
 
 use App\Application\Sport\SportFinderInterface;
-use App\Domain\Sport\ValueObject\SportId;
 use App\Application\Sport\SportModel;
+use App\Domain\Sport\ValueObject\SportId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,7 +22,7 @@ class DbalSportFinder implements SportFinderInterface
 
     public function getById(SportId $id): SportModel
     {
-         $query = $this->connection->createQueryBuilder();
+        $query = $this->connection->createQueryBuilder();
         $query
             ->select('*')
             ->from(self::TABLE_NAME)
@@ -36,7 +36,7 @@ class DbalSportFinder implements SportFinderInterface
             throw new NotFoundHttpException('Team not found');
         }
 
-        return SportModel::createFromRow($result);       
+        return SportModel::createFromRow($result);
     }
 
     public function getAll(array $sportIds = []): array

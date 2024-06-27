@@ -174,7 +174,7 @@ class MakeNewEntityClassCommand extends Command
                 self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
                 self::INFORMATION_ATTRIBUTES_STRING => [
                     Connection::class => 'private readonly',
-                    ClockInterface::class => 'private readonly'
+                    ClockInterface::class => 'private readonly',
                 ],
             ],
             'src/Framework/Controller/{ENTITY}Controller' => [

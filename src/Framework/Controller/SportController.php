@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\Application\Sport\Command\CreateSportCommand;
+use App\Application\Sport\Command\UpdateSportCommand;
 use App\Application\Sport\CommandHandler\CreateSportCommandHandler;
 use App\Application\Sport\CommandHandler\UpdateSportCommandHandler;
 use App\Application\Sport\SportFinderInterface;
-use App\Application\Team\Command\UpdateTeamCommand;
-use App\Application\Team\CommandHandler\UpdateTeamCommandHandler;
 use App\Domain\Sport\ValueObject\SportId;
 use App\Framework\Form\Sport\CreateSportFormType;
 use App\Framework\Form\Sport\UpdateSportFormType;
@@ -25,8 +24,7 @@ class SportController extends AbstractController
     public function create(
         CreateSportCommandHandler $handler,
         Request $request
-    ): Response
-    {
+    ): Response {
         $command = new CreateSportCommand();
         $form = $this->createForm(CreateSportFormType::class, $command);
         $form->handleRequest($request);
@@ -65,8 +63,8 @@ class SportController extends AbstractController
         Request $request,
         string $sportId,
     ): Response {
-        $team = $sportFinder->getById(SportId::fromString($sportId));
-        $command = UpdateTeamCommand::fromTeam($sport);
+        $sport = $sportFinder->getById(SportId::fromString($sportId));
+        $command = UpdateSportCommand::fromModel($sport);
         $form = $this->createForm(UpdateSportFormType::class, $command);
         $form->handleRequest($request);
 
@@ -74,18 +72,17 @@ class SportController extends AbstractController
             try {
                 $handler->handle($command);
 
-                return $this->redirectToRoute('team.index');
+                return $this->redirectToRoute('sport.index');
             } catch (\Throwable $e) {
                 throw new \Exception('Error creating person', previous: $e);
             }
         }
 
         return $this->render(
-            'team/create.html.twig',
+            'sport/create.html.twig',
             [
                 'form' => $form,
             ]
         );
     }
-
 }
