@@ -2,7 +2,12 @@
 
 namespace App\Framework\CliCommand;
 
+use App\Application\Common\AbstractMappedModel;
+use App\Application\Common\Service\ClockInterface;
+use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Common\ValueObject\AbstractUuidId;
+use App\Infrastructure\Common\AbstractDbalRepository;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -17,8 +22,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
     name: 'app:make-new-entity-class',
     description: 'Add a short description for your command',
 )]
-class MakeNewEntityClassCommand extends Command
+class MakeNewEntityClassCliCommand extends Command
 {
+    private const INFORMATION_ATTRIBUTES_STRING = 'attributes';
+    private const INFORMATION_IMPLEMENTS_STRING = 'implements';
+    private const INFORMATION_EXTENDS_STRING = 'extends';
+    private const INFORMATION_TYPE_STRING = 'type';
+
     private const NAME_ARG = 'className';
 
     public function __construct(
@@ -73,10 +83,26 @@ class MakeNewEntityClassCommand extends Command
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
-            $extends = '';
-            if (isset($information['extends'])) {
-                $extends = " extends \\{$information['extends']}";
+            $extendsImplements = '';
+            if (isset($information[self::INFORMATION_EXTENDS_STRING])) {
+                $extendsImplements .= " extends \\{$information[self::INFORMATION_EXTENDS_STRING]}";
             }
+
+            if (isset($information[self::INFORMATION_IMPLEMENTS_STRING])) {
+                $extendsImplements .= " implements \\{$information[self::INFORMATION_IMPLEMENTS_STRING]}";
+            }
+
+            $attributes = [];
+            if (isset($information[self::INFORMATION_ATTRIBUTES_STRING])) {
+                foreach ($information[self::INFORMATION_ATTRIBUTES_STRING] as $attrClass => $attrModifiers) {
+                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\') + 1));
+                    $attributes[] = "{$attrModifiers} \\{$attrClass} \${$attrName},";
+                }
+            }
+
+            $attributes = implode(PHP_EOL, $attributes);
+
+            $type = $information[self::INFORMATION_TYPE_STRING] ?? 'class';
 
             try {
                 $io->info("Creating `{$dir}`");
@@ -97,9 +123,10 @@ class MakeNewEntityClassCommand extends Command
 
             namespace {$nameSpace};
 
-            class {$className}{$extends}
+            {$type} {$className}{$extendsImplements}
             {
                 public function __construct(
+                    {$attributes}
                 )
                 {
                 }
@@ -120,26 +147,44 @@ class MakeNewEntityClassCommand extends Command
     {
         return [
             'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => [
-                'extends' => AbstractUuidId::class,
+                self::INFORMATION_EXTENDS_STRING => AbstractUuidId::class,
             ],
-            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => null,
-            'src/Domain/{ENTITY}/{ENTITY}' => null,
+            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => [
+                self::INFORMATION_TYPE_STRING => 'interface',
+            ],
+            'src/Domain/{ENTITY}/{ENTITY}Entity' => [
+                self::INFORMATION_EXTENDS_STRING => AbstractMappedEntity::class,
+            ],
             'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/Command/Edit{ENTITY}Command' => null,
+            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => null,
             'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/CommandHandler/Edit{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => null,
-            'src/Application/{ENTITY}/{ENTITY}' => null,
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => null,
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => null,
+            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => null,
+            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => [
+                self::INFORMATION_TYPE_STRING => 'interface',
+            ],
+            'src/Application/{ENTITY}/{ENTITY}Model' => [
+                self::INFORMATION_EXTENDS_STRING => AbstractMappedModel::class,
+            ],
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => [
+                self::INFORMATION_ATTRIBUTES_STRING => [
+                    Connection::class => 'private readonly',
+                ],
+            ],
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
+                self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
+                self::INFORMATION_ATTRIBUTES_STRING => [
+                    Connection::class => 'private readonly',
+                    ClockInterface::class => 'private readonly',
+                ],
+            ],
             'src/Framework/Controller/{ENTITY}Controller' => [
-                'extends' => AbstractController::class,
+                self::INFORMATION_EXTENDS_STRING => AbstractController::class,
             ],
             'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => [
-                'extends' => AbstractType::class,
+                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
             ],
             'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => [
-                'extends' => AbstractType::class,
+                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
             ],
         ];
     }

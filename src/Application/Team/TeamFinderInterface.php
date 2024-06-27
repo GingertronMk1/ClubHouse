@@ -8,12 +8,12 @@ use App\Domain\Team\ValueObject\TeamId;
 
 interface TeamFinderInterface
 {
-    public function getById(TeamId $id): Team;
+    public function getById(TeamId $id): TeamModel;
 
     /**
      * @param array<TeamId> $teamIds
      *
-     * @return array<Team>
+     * @return array<TeamModel>
      */
     public function getAll(array $teamIds = []): array;
 }

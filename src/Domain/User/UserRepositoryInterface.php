@@ -8,5 +8,5 @@ interface UserRepositoryInterface
 {
     public function generateId(): UserId;
 
-    public function store(User $user): UserId;
+    public function store(UserEntity $user): UserId;
 }

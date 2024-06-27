@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Person;
 
-use App\Application\Person\Person;
 use App\Application\Person\PersonFinderInterface;
+use App\Application\Person\PersonModel;
 use App\Application\User\UserFinderInterface;
-use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Person\ValueObject\PersonId;
-use App\Domain\User\ValueObject\UserId;
+use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -24,7 +23,7 @@ class DbalPersonFinder implements PersonFinderInterface
         private readonly LoggerInterface $logger
     ) {}
 
-    public function getById(PersonId $id): Person
+    public function getById(PersonId $id): PersonModel
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -77,27 +76,35 @@ class DbalPersonFinder implements PersonFinderInterface
         return $returnVal;
     }
 
+    public function getForTeam(TeamId $teamId): array
+    {
+        $peopleQuery = $this->connection->createQueryBuilder();
+        $peopleQuery
+            ->select('person_id')
+            ->from('team_people')
+            ->where('team_id = :team_id')
+            ->setParameter('team_id', (string) $teamId)
+        ;
+        $peopleIds = $peopleQuery->fetchFirstColumn();
+
+        $peopleIds = array_map(fn (string $personId) => PersonId::fromString($personId), $peopleIds);
+
+        $teamPeople = [];
+
+        if (!empty($peopleIds)) {
+            $teamPeople = $this->getAll($peopleIds);
+        }
+
+        return $teamPeople;
+    }
+
     /**
      * @param array<string, mixed> $row
      */
-    private function createFromRow(array $row): Person
+    private function createFromRow(array $row): PersonModel
     {
-        $user = null;
-        if (isset($row['user_id'])) {
-            $user = $this->userFinder->getById(UserId::fromString($row['user_id']));
-        }
-        $deletedAt = null;
-        if (isset($row['deleted_at'])) {
-            $deletedAt = DateTime::fromString($row['deleted_at']);
-        }
-
-        return new Person(
-            PersonId::fromString($row['id']),
-            $row['name'],
-            $user,
-            DateTime::fromString($row['created_at']),
-            DateTime::fromString($row['updated_at']),
-            $deletedAt
-        );
+        return PersonModel::createFromRow($row, [
+            UserFinderInterface::class => $this->userFinder,
+        ]);
     }
 }

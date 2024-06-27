@@ -10,5 +10,5 @@ interface PersonRepositoryInterface
 {
     public function generateId(): PersonId;
 
-    public function store(Person $person): PersonId;
+    public function store(PersonEntity $person): PersonId;
 }

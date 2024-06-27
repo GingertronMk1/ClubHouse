@@ -6,7 +6,7 @@ namespace App\Infrastructure\Team;
 
 use App\Application\Common\Service\ClockInterface;
 use App\Domain\Person\ValueObject\PersonId;
-use App\Domain\Team\Team;
+use App\Domain\Team\TeamEntity;
 use App\Domain\Team\TeamRepositoryInterface;
 use App\Domain\Team\ValueObject\TeamId;
 use App\Infrastructure\Common\AbstractDbalRepository;
@@ -26,7 +26,7 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
         return TeamId::generate();
     }
 
-    public function store(Team $team): TeamId
+    public function store(TeamEntity $team): TeamId
     {
         $storeTeam = $this->storeMappedData(
             $team,

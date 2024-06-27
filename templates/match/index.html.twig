@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block classes %}people{% endblock %}
+
+{% block body %}
+    {% set people = people|default([]) %}
+
+    <a class="match__create-link" href="{{ path('match.create') }}">New</a>
+    <table class="match__table">
+            <tr>
+                <th>Match Name</th>
+                <th>Details</th>
+                <th>Start Time</th>
+                <th>Team 1</th>
+                <th>Team 2</th>
+                <th>Sport</th>
+                <th>Created At</th>
+                <th>Last Updated At</th>
+                <th>Actions</th>
+            </tr>
+    {% for match in matches %}
+        <tr data-match-id="{{ match.id }}">
+            <td>{{ match.name }}</td>
+            <td>{{ match.details }}</td>
+            <td>{{ match.start|date('Y-m-d H:i') }}</td>
+            <td>{{ match.team1 ? match.team1.name : '' }}</td>
+            <td>{{ match.team2 ? match.team2.name : '' }}</td>
+            <td>{{ match.sport ? match.sport.name : '' }}</td>
+            <td>{{ match.createdAt|date('Y-m-d H:i:s') }}</td>
+            <td>{{ match.updatedAt|date('Y-m-d H:i:s') }}</td>
+            <td><a href="{{ path('match.update', {matchId: match.id}) }}">Edit</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}

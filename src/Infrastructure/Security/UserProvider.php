@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Security;
 
-use App\Domain\User\User;
+use App\Domain\User\UserEntity;
 use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * @implements UserProviderInterface<User>
+ * @implements UserProviderInterface<UserEntity>
  */
 class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
@@ -55,7 +55,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
             throw new NotFoundHttpException("Could not find user by identifier `{$identifier}`.");
         }
 
-        return new User(
+        return new UserEntity(
             UserId::fromString((string) $result['id']),
             (string) $result['email'],
             (string) $result['password'],
@@ -86,7 +86,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (!$user instanceof User) {
+        if (!$user instanceof UserEntity) {
             throw new UnsupportedUserException(sprintf('Invalid user class "%s".', $user::class));
         }
 
@@ -100,7 +100,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
      */
     public function supportsClass(string $class): bool
     {
-        return User::class === $class || is_subclass_of($class, User::class);
+        return UserEntity::class === $class || is_subclass_of($class, UserEntity::class);
     }
 
     /**

@@ -10,5 +10,5 @@ interface TeamRepositoryInterface
 {
     public function generateId(): TeamId;
 
-    public function store(Team $team): TeamId;
+    public function store(TeamEntity $team): TeamId;
 }

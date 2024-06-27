@@ -3,7 +3,7 @@
 namespace App\Infrastructure\User;
 
 use App\Application\Common\Service\ClockInterface;
-use App\Domain\User\User;
+use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
 use App\Infrastructure\Common\AbstractDbalRepository;
@@ -23,7 +23,7 @@ class DbalUserRepository extends AbstractDbalRepository implements UserRepositor
         return UserId::generate();
     }
 
-    public function store(User $user): UserId
+    public function store(UserEntity $user): UserId
     {
         $storePerson = $this->storeMappedData(
             entity: $user,

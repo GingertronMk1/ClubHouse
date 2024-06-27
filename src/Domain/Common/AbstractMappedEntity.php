@@ -9,7 +9,7 @@ abstract class AbstractMappedEntity
     /**
      * @param array<string, mixed> $externalServices
      *
-     * @return array<string, mixed>
+     * @return array<string, ?string>
      */
     abstract public function getMappedData(array $externalServices = []): array;
 }

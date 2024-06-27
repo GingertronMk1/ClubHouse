@@ -2,7 +2,7 @@
 
 namespace App\Framework\CliCommand;
 
-use App\Domain\User\User;
+use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'app:make-admin-user',
     description: 'Create an admin user with a default username and password',
 )]
-class MakeAdminUserCommand extends Command
+class MakeAdminUserCliCommand extends Command
 {
     private const ADMIN_EMAIL = 'test@clubhouse.test';
     private const ADMIN_PASSWORD = '12345';
@@ -36,7 +36,7 @@ class MakeAdminUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $user = new User(
+        $user = new UserEntity(
             $this->userRepository->generateId(),
             self::ADMIN_EMAIL,
             self::ADMIN_PASSWORD,

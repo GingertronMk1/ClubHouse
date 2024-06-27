@@ -2,4 +2,4 @@
 
 source .env
 
-./_docker/bin/app/exec composer phinx create "$@"
+./_docker/bin/app/console doctrine:migrations:generate
