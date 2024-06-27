@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Person;
 
 use App\Application\Common\Service\ClockInterface;
-use App\Domain\Person\Person;
+use App\Domain\Person\PersonEntity;
 use App\Domain\Person\PersonRepositoryInterface;
 use App\Domain\Person\ValueObject\PersonId;
 use App\Infrastructure\Common\AbstractDbalRepository;
@@ -23,7 +23,7 @@ class DbalPersonRepository extends AbstractDbalRepository implements PersonRepos
         return PersonId::generate();
     }
 
-    public function store(Person $person): PersonId
+    public function store(PersonEntity $person): PersonId
     {
         $storePerson = $this->storeMappedData(
             $person,

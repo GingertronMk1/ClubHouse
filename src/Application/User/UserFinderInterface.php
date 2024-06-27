@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\User;
 
-use App\Application\User;
 use App\Domain\User\ValueObject\UserId;
 
 interface UserFinderInterface
 {
-    public function getById(UserId $id): User;
+    public function getById(UserId $id): UserModel;
 
     /**
-     * @return array<User>
+     * @return array<UserModel>
      */
     public function getAll(): array;
 }

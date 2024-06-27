@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\User;
 
-use App\Application\User;
 use App\Application\User\UserFinderInterface;
+use App\Application\User\UserModel;
 use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -18,7 +18,7 @@ class DbalUserFinder implements UserFinderInterface
         private readonly LoggerInterface $logger
     ) {}
 
-    public function getById(UserId $id): User
+    public function getById(UserId $id): UserModel
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -63,13 +63,13 @@ class DbalUserFinder implements UserFinderInterface
     /**
      * @param array<string, mixed> $row
      */
-    private function createFromRow(array $row): User
+    private function createFromRow(array $row): UserModel
     {
         if (!(isset($row['id'], $row['email']))) {
             throw new \Exception('Values not set');
         }
 
-        return new User(
+        return new UserModel(
             UserId::fromString($row['id']),
             $row['email'],
             []

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Application\Team\Command;
 
-use App\Application\Person\Person;
-use App\Application\Team\Team;
+use App\Application\Person\PersonModel;
+use App\Application\Team\TeamModel;
 use App\Domain\Team\ValueObject\TeamId;
 
 class UpdateTeamCommand
 {
     /**
-     * @param array<Person> $people
+     * @param array<PersonModel> $people
      */
     private function __construct(
         public TeamId $id,
@@ -20,7 +20,7 @@ class UpdateTeamCommand
         public array $people,
     ) {}
 
-    public static function fromTeam(Team $team): self
+    public static function fromTeam(TeamModel $team): self
     {
         return new self(
             $team->id,

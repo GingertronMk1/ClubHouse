@@ -11,9 +11,9 @@ use Doctrine\DBAL\Connection;
 abstract class AbstractDbalRepository
 {
     /**
-     * Store any given mapped entity
-     * 
-     * @param string|array<string> $idColumn
+     * Store any given mapped entity.
+     *
+     * @param array<string>|string $idColumn
      * @param array<string, mixed> $externalServices
      */
     protected function storeMappedData(
@@ -21,7 +21,7 @@ abstract class AbstractDbalRepository
         Connection $connection,
         string $tableName,
         ?ClockInterface $clock = null,
-        string|array $idColumn = 'id',
+        array|string $idColumn = 'id',
         array $externalServices = []
     ): int {
         if (is_string($idColumn)) {
@@ -36,10 +36,11 @@ abstract class AbstractDbalRepository
             ->select('*')
             ->from($tableName)
         ;
-        foreach($idColumn as $colKey => $col) {
+        foreach ($idColumn as $colKey => $col) {
             $existsQuery
                 ->andWhere("{$col} = :id{$colKey}")
-                ->setParameter("id{$colKey}", $entityMappedData[$col]);
+                ->setParameter("id{$colKey}", $entityMappedData[$col])
+            ;
         }
 
         $storeQuery = $connection->createQueryBuilder();
@@ -47,10 +48,11 @@ abstract class AbstractDbalRepository
             $storeQuery
                 ->update($tableName)
             ;
-            foreach($idColumn as $colKey => $col) {
+            foreach ($idColumn as $colKey => $col) {
                 $storeQuery
                     ->andWhere("{$col} = :id{$colKey}")
-                    ->setParameter("id{$colKey}", $entityMappedData[$col]);
+                    ->setParameter("id{$colKey}", $entityMappedData[$col])
+                ;
             }
 
             foreach ($entityMappedData as $column => $value) {

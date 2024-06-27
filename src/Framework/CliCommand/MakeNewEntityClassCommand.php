@@ -2,6 +2,8 @@
 
 namespace App\Framework\CliCommand;
 
+use App\Application\Common\AbstractMappedModel;
+use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Common\ValueObject\AbstractUuidId;
 use App\Infrastructure\Common\AbstractDbalRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -83,7 +85,6 @@ class MakeNewEntityClassCommand extends Command
                 $extendsImplements .= " implements \\{$information['implements']}";
             }
 
-
             try {
                 $io->info("Creating `{$dir}`");
                 mkdir($dir, recursive: true);
@@ -129,13 +130,17 @@ class MakeNewEntityClassCommand extends Command
                 'extends' => AbstractUuidId::class,
             ],
             'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => null,
-            'src/Domain/{ENTITY}/{ENTITY}' => null,
+            'src/Domain/{ENTITY}/{ENTITY}Entity' => [
+                'extends' => AbstractMappedEntity::class,
+            ],
             'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
             'src/Application/{ENTITY}/Command/Edit{ENTITY}Command' => null,
             'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
             'src/Application/{ENTITY}/CommandHandler/Edit{ENTITY}CommandHandler' => null,
             'src/Application/{ENTITY}/{ENTITY}FinderInterface' => null,
-            'src/Application/{ENTITY}/{ENTITY}' => null,
+            'src/Application/{ENTITY}/{ENTITY}Model' => [
+                'extends' => AbstractMappedModel::class,
+            ],
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => null,
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
                 'extends' => AbstractDbalRepository::class,

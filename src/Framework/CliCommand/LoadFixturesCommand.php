@@ -2,11 +2,11 @@
 
 namespace App\Framework\CliCommand;
 
-use App\Domain\Person\Person;
+use App\Domain\Person\PersonEntity;
 use App\Domain\Person\PersonRepositoryInterface;
-use App\Domain\Team\Team;
+use App\Domain\Team\TeamEntity;
 use App\Domain\Team\TeamRepositoryInterface;
-use App\Domain\User\User;
+use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,7 +35,7 @@ class LoadFixturesCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         foreach ($io->progressIterate(range(1, 15)) as $value) {
-            $user = new User(
+            $user = new UserEntity(
                 $this->userRepositoryInterface->generateId(),
                 "testUser{$value}@clubhouse.test",
                 '12345',
@@ -43,14 +43,14 @@ class LoadFixturesCommand extends Command
             );
             $userId = $this->userRepositoryInterface->store($user);
 
-            $person = new Person(
+            $person = new PersonEntity(
                 $this->personRepositoryInterface->generateId(),
                 "Test Person {$value}",
                 $userId
             );
             $personId = $this->personRepositoryInterface->store($person);
 
-            $team = new Team(
+            $team = new TeamEntity(
                 $this->teamRepositoryInterface->generateId(),
                 "Test Team {$value}",
                 $value % 2 ? "This is test team number {$value}." : '',

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Infrastructure\Team;
 
 use App\Application\Person\PersonFinderInterface;
-use App\Application\Team\Team;
 use App\Application\Team\TeamFinderInterface;
+use App\Application\Team\TeamModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Person\ValueObject\PersonId;
 use App\Domain\Team\ValueObject\TeamId;
@@ -24,7 +24,7 @@ class DbalTeamFinder implements TeamFinderInterface
         private readonly PersonFinderInterface $personFinder
     ) {}
 
-    public function getById(TeamId $id): Team
+    public function getById(TeamId $id): TeamModel
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -37,7 +37,7 @@ class DbalTeamFinder implements TeamFinderInterface
         $result = $query->fetchAssociative();
 
         if (!$result) {
-            throw new NotFoundHttpException('User not found');
+            throw new NotFoundHttpException('Team not found');
         }
 
         return $this->createFromRow($result);
@@ -77,7 +77,7 @@ class DbalTeamFinder implements TeamFinderInterface
     /**
      * @param array<string, mixed> $row
      */
-    private function createFromRow(array $row): Team
+    private function createFromRow(array $row): TeamModel
     {
         $deletedAt = null;
         if (isset($row['deleted_at'])) {
@@ -101,7 +101,7 @@ class DbalTeamFinder implements TeamFinderInterface
             $teamPeople = $this->personFinder->getAll($peopleIds);
         }
 
-        return new Team(
+        return new TeamModel(
             TeamId::fromString($row['id']),
             $row['name'],
             $row['description'],

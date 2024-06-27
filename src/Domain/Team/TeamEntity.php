@@ -2,18 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Person;
+namespace App\Domain\Team;
 
 use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Person\ValueObject\PersonId;
-use App\Domain\User\ValueObject\UserId;
+use App\Domain\Team\ValueObject\TeamId;
 
-class Person extends AbstractMappedEntity
+class TeamEntity extends AbstractMappedEntity
 {
+    /**
+     * @param array<PersonId> $peopleIds
+     */
     public function __construct(
-        public readonly PersonId $id,
+        public readonly TeamId $id,
         public readonly string $name,
-        public readonly ?UserId $userId
+        public readonly string $description,
+        public readonly array $peopleIds
     ) {}
 
     public function getMappedData(array $externalServices = []): array
@@ -21,7 +25,7 @@ class Person extends AbstractMappedEntity
         return [
             'id' => (string) $this->id,
             'name' => $this->name,
-            'user_id' => $this->userId ? (string) $this->userId : null,
+            'description' => $this->description,
         ];
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Application\Person\Command;
 
-use App\Application\Person\Person;
-use App\Application\User;
+use App\Application\Person\PersonModel;
+use App\Application\User\UserModel;
 use App\Domain\Person\ValueObject\PersonId;
 
 class UpdatePersonCommand
@@ -13,10 +13,10 @@ class UpdatePersonCommand
     private function __construct(
         public PersonId $id,
         public string $name,
-        public ?User $user
+        public ?UserModel $user
     ) {}
 
-    public static function fromPerson(Person $person): self
+    public static function fromPerson(PersonModel $person): self
     {
         return new self(
             $person->id,

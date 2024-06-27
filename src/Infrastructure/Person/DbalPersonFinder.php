@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Person;
 
-use App\Application\Person\Person;
 use App\Application\Person\PersonFinderInterface;
+use App\Application\Person\PersonModel;
 use App\Application\User\UserFinderInterface;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Person\ValueObject\PersonId;
@@ -24,7 +24,7 @@ class DbalPersonFinder implements PersonFinderInterface
         private readonly LoggerInterface $logger
     ) {}
 
-    public function getById(PersonId $id): Person
+    public function getById(PersonId $id): PersonModel
     {
         $query = $this->connection->createQueryBuilder();
         $query
@@ -80,7 +80,7 @@ class DbalPersonFinder implements PersonFinderInterface
     /**
      * @param array<string, mixed> $row
      */
-    private function createFromRow(array $row): Person
+    private function createFromRow(array $row): PersonModel
     {
         $user = null;
         if (isset($row['user_id'])) {
@@ -91,7 +91,7 @@ class DbalPersonFinder implements PersonFinderInterface
             $deletedAt = DateTime::fromString($row['deleted_at']);
         }
 
-        return new Person(
+        return new PersonModel(
             PersonId::fromString($row['id']),
             $row['name'],
             $user,

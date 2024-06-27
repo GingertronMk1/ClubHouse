@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application;
+namespace App\Application\User;
 
 use App\Domain\User\ValueObject\UserId;
 
-class User
+class UserModel
 {
     /**
      * Undocumented function.

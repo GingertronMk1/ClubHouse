@@ -2,7 +2,7 @@
 
 namespace App\Framework\CliCommand;
 
-use App\Domain\User\User;
+use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -36,7 +36,7 @@ class MakeAdminUserCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $user = new User(
+        $user = new UserEntity(
             $this->userRepository->generateId(),
             self::ADMIN_EMAIL,
             self::ADMIN_PASSWORD,
