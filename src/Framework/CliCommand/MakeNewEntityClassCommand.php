@@ -93,7 +93,8 @@ class MakeNewEntityClassCommand extends Command
             $attributes = [];
             if (isset($information[self::INFORMATION_ATTRIBUTES_STRING])) {
                 foreach ($information[self::INFORMATION_ATTRIBUTES_STRING] as $attrClass => $attrModifiers) {
-                    $attributes[] = $attrModifiers . ' ' . $attrClass;
+                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\')+1));
+                    $attributes[] = "{$attrModifiers} {$attrClass} {$attrName},";
                 }
             }
 
