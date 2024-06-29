@@ -27,6 +27,7 @@ class EntityClass
         }
         return $this->getVal('extends', $this->implements);
     }
+
     public function getImplements(): string
     {
         if (empty($this->implements)) {
