@@ -6,6 +6,7 @@ use App\Application\Common\AbstractMappedModel;
 use App\Application\Common\Service\ClockInterface;
 use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Common\ValueObject\AbstractUuidId;
+use App\Domain\Util\EntityClass;
 use App\Infrastructure\Common\AbstractDbalRepository;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -83,27 +84,6 @@ class MakeNewEntityClassCliCommand extends Command
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
-            $extendsImplements = '';
-            if (isset($information[self::INFORMATION_EXTENDS_STRING])) {
-                $extendsImplements .= " extends \\{$information[self::INFORMATION_EXTENDS_STRING]}";
-            }
-
-            if (isset($information[self::INFORMATION_IMPLEMENTS_STRING])) {
-                $extendsImplements .= " implements \\{$information[self::INFORMATION_IMPLEMENTS_STRING]}";
-            }
-
-            $attributes = [];
-            if (isset($information[self::INFORMATION_ATTRIBUTES_STRING])) {
-                foreach ($information[self::INFORMATION_ATTRIBUTES_STRING] as $attrClass => $attrModifiers) {
-                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\') + 1));
-                    $attributes[] = "{$attrModifiers} \\{$attrClass} \${$attrName},";
-                }
-            }
-
-            $attributes = implode(PHP_EOL, $attributes);
-
-            $type = $information[self::INFORMATION_TYPE_STRING] ?? 'class';
-
             try {
                 $io->info("Creating `{$dir}`");
                 mkdir($dir, recursive: true);
@@ -123,10 +103,10 @@ class MakeNewEntityClassCliCommand extends Command
 
             namespace {$nameSpace};
 
-            {$type} {$className}{$extendsImplements}
+            {$information->type} {$className} {$information->getExtends()} {$information->getImplements()}
             {
                 public function __construct(
-                    {$attributes}
+                    {$information->getAttributes()}
                 )
                 {
                 }
@@ -141,51 +121,52 @@ class MakeNewEntityClassCliCommand extends Command
     }
 
     /**
-     * @return array<string, ?array<mixed>>
+     * @return array<string, EntityClass>
      */
     private function getClassFileNames(): array
     {
         return [
-            'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractUuidId::class,
-            ],
-            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => [
-                self::INFORMATION_TYPE_STRING => 'interface',
-            ],
-            'src/Domain/{ENTITY}/{ENTITY}Entity' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractMappedEntity::class,
-            ],
+            'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => new EntityClass(
+                extends:  AbstractUuidId::class,
+                ),
+            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => new EntityClass(
+                type: 'interface'
+            ),
+            'src/Domain/{ENTITY}/{ENTITY}Entity' => new EntityClass(
+                extends: AbstractMappedEntity::class
+            ),
             'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
             'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => null,
             'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
             'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => [
-                self::INFORMATION_TYPE_STRING => 'interface',
-            ],
-            'src/Application/{ENTITY}/{ENTITY}Model' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractMappedModel::class,
-            ],
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => [
-                self::INFORMATION_ATTRIBUTES_STRING => [
-                    Connection::class => 'private readonly',
-                ],
-            ],
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
-                self::INFORMATION_ATTRIBUTES_STRING => [
+            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => new EntityClass(
+                type: 'interface',
+            ),
+            'src/Application/{ENTITY}/{ENTITY}Model' => new EntityClass(
+                extends: AbstractMappedModel::class,
+            ),
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => new EntityClass(
+                attributes: [
+                    Connection::class => 'private readonly'
+                ]
+            ),
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => new EntityClass(
+                extends: AbstractDbalRepository::class,
+                attributes: [
                     Connection::class => 'private readonly',
                     ClockInterface::class => 'private readonly',
-                ],
-            ],
-            'src/Framework/Controller/{ENTITY}Controller' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractController::class,
-            ],
-            'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
-            ],
-            'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
-            ],
+                ]
+            ),
+            'src/Framework/Controller/{ENTITY}Controller' => new EntityClass(
+                extends: AbstractController::class
+            ),
+            'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => new EntityClass(
+                extends: AbstractType::class
+            ),
+            'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => new EntityClass(
+                extends: AbstractType::class
+            ),
+
         ];
     }
 }
