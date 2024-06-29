@@ -6,16 +6,17 @@ namespace App\Infrastructure\MatchPerson;
 
 use App\Application\Match\MatchFinderInterface;
 use App\Application\MatchPerson\MatchPersonFinderInterface;
-use App\Domain\Match\ValueObject\MatchId;
-use App\Domain\Person\ValueObject\PersonId;
 use App\Application\MatchPerson\MatchPersonModel;
 use App\Application\Person\PersonFinderInterface;
+use App\Domain\Match\ValueObject\MatchId;
+use App\Domain\Person\ValueObject\PersonId;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalMatchPersonFinder implements MatchPersonFinderInterface
 {
     private const TABLE_NAME = 'match_people';
+
     public function __construct(
         private readonly Connection $connection,
         private readonly MatchFinderInterface $matchFinder,
@@ -34,8 +35,9 @@ class DbalMatchPersonFinder implements MatchPersonFinderInterface
             )
             ->setParameters([
                 'match_id' => (string) $matchId,
-                'person_id' => (string) $personId
-            ]);
+                'person_id' => (string) $personId,
+            ])
+        ;
 
         $result = $query->fetchAssociative();
 
@@ -47,7 +49,7 @@ class DbalMatchPersonFinder implements MatchPersonFinderInterface
             $result,
             [
                 MatchFinderInterface::class => $this->matchFinder,
-                PersonFinderInterface::class => $this->personFinder
+                PersonFinderInterface::class => $this->personFinder,
             ]
         );
     }
@@ -64,12 +66,12 @@ class DbalMatchPersonFinder implements MatchPersonFinderInterface
         $result = $query->fetchAllAssociative();
         $returnVal = [];
 
-        foreach($result as $row) {
+        foreach ($result as $row) {
             $returnVal[] = MatchPersonModel::createFromRow(
                 $row,
                 [
                     MatchFinderInterface::class => $this->matchFinder,
-                    PersonFinderInterface::class => $this->personFinder
+                    PersonFinderInterface::class => $this->personFinder,
                 ]
             );
         }

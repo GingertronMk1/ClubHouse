@@ -11,6 +11,7 @@ class CreateMatchPersonCommand
 {
     public function __construct(
         public MatchModel $match,
-        public ?PersonModel $person
+        public ?PersonModel $person = null,
+        public ?string $role = ''
     ) {}
 }

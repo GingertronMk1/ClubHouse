@@ -53,11 +53,10 @@ final class Version20240629170420 extends AbstractMigration
 
         $table->addForeignKeyConstraint('matches', ['match_id'], ['id']);
         $table->addForeignKeyConstraint('people', ['person_id'], ['id']);
- }
+    }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-
     }
 }

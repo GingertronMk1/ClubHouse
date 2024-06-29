@@ -7,7 +7,8 @@ namespace App\Application\MatchPerson;
 use App\Domain\Match\ValueObject\MatchId;
 use App\Domain\Person\ValueObject\PersonId;
 
-interface MatchPersonFinderInterface {
+interface MatchPersonFinderInterface
+{
     public function getByIds(MatchId $matchId, PersonId $personId): MatchPersonModel;
 
     /**

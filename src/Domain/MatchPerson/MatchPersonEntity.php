@@ -13,7 +13,7 @@ class MatchPersonEntity extends AbstractMappedEntity
     public function __construct(
         public readonly MatchId $matchId,
         public readonly PersonId $personId,
-        public readonly string $role = ''
+        public readonly ?string $role = ''
     ) {}
 
     public function getMappedData(array $externalServices = []): array
@@ -21,7 +21,7 @@ class MatchPersonEntity extends AbstractMappedEntity
         return [
             'match_id' => (string) $this->matchId,
             'person_id' => (string) $this->personId,
-            'role' => $this->role
+            'role' => $this->role,
         ];
     }
 }

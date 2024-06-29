@@ -28,19 +28,19 @@ class UpdateMatchPersonFormType extends AbstractType
                     'placeholder' => 'Choose the person',
                     'choices' => $this->personFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
-            )            ->add(
+            )->add(
                 'match',
                 ChoiceType::class,
                 [
                     'placeholder' => 'Choose the person',
                     'choices' => $this->matchFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
             )
             ->add('submit', SubmitType::class)
-            ;
+        ;
     }
 }

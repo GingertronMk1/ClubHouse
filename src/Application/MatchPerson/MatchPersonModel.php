@@ -24,18 +24,19 @@ class MatchPersonModel extends AbstractMappedModel
     {
         self::checkServicesExist($externalServices, [
             MatchFinderInterface::class,
-            PersonFinderInterface::class
+            PersonFinderInterface::class,
         ]);
 
         /** @var MatchFinderInterface */
-        $matchFinder = $row[MatchFinderInterface::class];
+        $matchFinder = $externalServices[MatchFinderInterface::class];
+
         /** @var PersonFinderInterface */
-        $personFinder = $row[PersonFinderInterface::class];
+        $personFinder = $externalServices[PersonFinderInterface::class];
 
         return new self(
             $matchFinder->getById(MatchId::fromString($row['match_id'])),
             $personFinder->getById(PersonId::fromString($row['person_id'])),
-            $row['role']
+            $row['role'] ?? ''
         );
     }
 }
