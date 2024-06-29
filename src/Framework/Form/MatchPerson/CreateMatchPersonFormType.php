@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Framework\Form\MatchPerson;
 
-class CreateMatchPersonFormType extends Symfony\Component\Form\AbstractType
+use Symfony\Component\Form\AbstractType;
+
+class CreateMatchPersonFormType extends AbstractType
 {
     public function __construct() {}
 }

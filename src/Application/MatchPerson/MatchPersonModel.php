@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Application\MatchPerson;
 
-class MatchPersonModel extends App\Application\Common\AbstractMappedModel
+use App\Application\Common\AbstractMappedModel;
+
+class MatchPersonModel extends AbstractMappedModel
 {
     public function __construct() {}
 }

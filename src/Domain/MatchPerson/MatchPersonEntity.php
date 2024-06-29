@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\MatchPerson;
 
-class MatchPersonEntity extends App\Domain\Common\AbstractMappedEntity
+use App\Domain\Common\AbstractMappedEntity;
+
+class MatchPersonEntity extends AbstractMappedEntity
 {
     public function __construct() {}
 }

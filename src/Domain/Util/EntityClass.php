@@ -16,8 +16,8 @@ class EntityClass
         private array $attributes = [],
         public readonly string $type = 'class'
     ) {
-        $this->implements = is_string($implements) ? [$implements] : $implements;
-        $this->extends = is_string($extends) ? [$extends] : $extends;
+        $this->implements = array_map(fn (string $implement) => '\\'.$implement, is_string($implements) ? [$implements] : $implements);
+        $this->extends = array_map(fn (string $extend) => '\\'.$extend, is_string($extends) ? [$extends] : $extends);
     }
 
     public function getExtends(): string

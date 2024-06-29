@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Framework\Controller;
 
-class MatchPersonController extends Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+class MatchPersonController extends AbstractController
 {
     public function __construct() {}
 }
