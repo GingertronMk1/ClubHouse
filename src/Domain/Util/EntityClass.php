@@ -6,13 +6,14 @@ namespace App\Domain\Util;
 
 class EntityClass
 {
-    public readonly array $implements;
-    public readonly array $extends;
+    private array $implements;
+    private array $extends;
 
     public function __construct(
+        public readonly string $template,
         array|string $implements = [],
         array|string $extends = [],
-        public readonly array $attributes = [],
+        private array $attributes = [],
         public readonly string $type = 'class'
     ) {
         $this->implements = is_string($implements) ? [$implements] : $implements;

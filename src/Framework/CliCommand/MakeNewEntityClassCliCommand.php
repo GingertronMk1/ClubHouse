@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
 
 #[AsCommand(
     name: 'app:make-new-entity-class',
@@ -25,15 +26,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 )]
 class MakeNewEntityClassCliCommand extends Command
 {
-    private const INFORMATION_ATTRIBUTES_STRING = 'attributes';
-    private const INFORMATION_IMPLEMENTS_STRING = 'implements';
-    private const INFORMATION_EXTENDS_STRING = 'extends';
-    private const INFORMATION_TYPE_STRING = 'type';
-
     private const NAME_ARG = 'className';
 
     public function __construct(
-        private readonly KernelInterface $kernel
+        private readonly KernelInterface $kernel,
+        private readonly Environment $twig,
     ) {
         parent::__construct();
     }
@@ -96,23 +93,17 @@ class MakeNewEntityClassCliCommand extends Command
             if (!$file) {
                 throw new \Exception("Something's gone wrong");
             }
-            fwrite($file, <<<EOF
-            <?php
-
-            declare(strict_types=1);
-
-            namespace {$nameSpace};
-
-            {$information->type} {$className} {$information->getExtends()} {$information->getImplements()}
-            {
-                public function __construct(
-                    {$information->getAttributes()}
-                )
-                {
-                }
-            }
+            $content = $this->twig->render(
+                "_util/make-entity/{$information->template}.php.twig",
+                [
+                    'className' => $className,
+                    'nameSpace' => $nameSpace,
+                    'entity' => $information
+                ]
+            );
             
-            EOF);
+         
+            fwrite($file, $content);
         }
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
@@ -127,30 +118,45 @@ class MakeNewEntityClassCliCommand extends Command
     {
         return [
             'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => new EntityClass(
+                'id',
                 extends:  AbstractUuidId::class,
                 ),
             'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => new EntityClass(
+                'repository-interface',
                 type: 'interface'
             ),
             'src/Domain/{ENTITY}/{ENTITY}Entity' => new EntityClass(
+                'entity',
                 extends: AbstractMappedEntity::class
             ),
-            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => new EntityClass(),
-            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => new EntityClass(),
-            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => new EntityClass(),
-            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => new EntityClass(),
+            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => new EntityClass(
+                'create-command'
+            ),
+            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => new EntityClass(
+                'update-command'
+            ),
+            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => new EntityClass(
+                'create-command-handler'
+            ),
+            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => new EntityClass(
+                'update-command-handler'
+            ),
             'src/Application/{ENTITY}/{ENTITY}FinderInterface' => new EntityClass(
+                'finder-interface',
                 type: 'interface',
             ),
             'src/Application/{ENTITY}/{ENTITY}Model' => new EntityClass(
+                'model',
                 extends: AbstractMappedModel::class,
             ),
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => new EntityClass(
+                'dbal-finder',
                 attributes: [
                     Connection::class => 'private readonly'
                 ]
             ),
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => new EntityClass(
+                'dbal-repository',
                 extends: AbstractDbalRepository::class,
                 attributes: [
                     Connection::class => 'private readonly',
@@ -158,12 +164,15 @@ class MakeNewEntityClassCliCommand extends Command
                 ]
             ),
             'src/Framework/Controller/{ENTITY}Controller' => new EntityClass(
+                'controller',
                 extends: AbstractController::class
             ),
             'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => new EntityClass(
+                'create-form',
                 extends: AbstractType::class
             ),
             'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => new EntityClass(
+                'update-form',
                 extends: AbstractType::class
             ),
 

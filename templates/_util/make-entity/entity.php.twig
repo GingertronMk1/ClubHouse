@@ -1,0 +1,10 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+{{ entity.type }} {{ className }} {{ entity.getExtends() }} {{ entity.getImplements() }}
+{
+    public function __construct({{ entity.getAttributes() }}) {}
+}
