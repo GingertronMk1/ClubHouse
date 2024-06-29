@@ -23,29 +23,33 @@ class EntityClass
     public function getExtends(): string
     {
         if (empty($this->extends)) {
-            return "";
+            return '';
         }
+
         return $this->getVal('extends', $this->extends);
     }
 
     public function getImplements(): string
     {
         if (empty($this->implements)) {
-            return "";
+            return '';
         }
+
         return $this->getVal('implements', $this->implements);
     }
+
     public function getAttributes(): string
     {
-        $returnVal = '';
-        foreach($this->attributes as $attrClass => $attrMod) {
-            $returnVal .= "$attrMod $attrClass," . PHP_EOL;
+        $returnValArr = [];
+        foreach ($this->attributes as $attrClass => $attrMod) {
+            $returnValArr[] = "{$attrMod} {$attrClass}";
         }
-        return $returnVal;
+
+        return implode(','.PHP_EOL, $returnValArr);
     }
 
     private function getVal(string $type, array $val): string
     {
-        return $type . ' ' . implode(', ', $this->implements);
+        return $type.' '.implode(', ', $this->implements);
     }
 }

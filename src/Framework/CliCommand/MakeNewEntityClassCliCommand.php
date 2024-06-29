@@ -98,11 +98,10 @@ class MakeNewEntityClassCliCommand extends Command
                 [
                     'className' => $className,
                     'nameSpace' => $nameSpace,
-                    'entity' => $information
+                    'entity' => $information,
                 ]
             );
-            
-         
+
             fwrite($file, $content);
         }
 
@@ -119,8 +118,8 @@ class MakeNewEntityClassCliCommand extends Command
         return [
             'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => new EntityClass(
                 'id',
-                extends:  AbstractUuidId::class,
-                ),
+                extends: AbstractUuidId::class,
+            ),
             'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => new EntityClass(
                 'repository-interface',
                 type: 'interface'
@@ -152,7 +151,7 @@ class MakeNewEntityClassCliCommand extends Command
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => new EntityClass(
                 'dbal-finder',
                 attributes: [
-                    Connection::class => 'private readonly'
+                    Connection::class => 'private readonly',
                 ]
             ),
             'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => new EntityClass(
@@ -175,7 +174,6 @@ class MakeNewEntityClassCliCommand extends Command
                 'update-form',
                 extends: AbstractType::class
             ),
-
         ];
     }
 }
