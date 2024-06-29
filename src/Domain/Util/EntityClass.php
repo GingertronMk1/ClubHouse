@@ -45,7 +45,7 @@ class EntityClass
 
             $attrClassBaseName = substr($attrClass, strrpos($attrClass, '\\') + 1);
             $attrName = '$' . lcfirst($attrClassBaseName);
-            $returnValArr[] = "{$attrMod} {$attrClass} {$attrName}";
+            $returnValArr[] = "{$attrMod} \\{$attrClass} {$attrName}";
         }
 
         return implode(','.PHP_EOL, $returnValArr);
