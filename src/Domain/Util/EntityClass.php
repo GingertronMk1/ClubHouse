@@ -21,10 +21,16 @@ class EntityClass
 
     public function getExtends(): string
     {
+        if (empty($this->extends)) {
+            return "";
+        }
         return $this->getVal('extends', $this->implements);
     }
     public function getImplements(): string
     {
+        if (empty($this->implements)) {
+            return "";
+        }
         return $this->getVal('implements', $this->implements);
     }
     public function getAttributes(): string

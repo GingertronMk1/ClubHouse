@@ -135,10 +135,10 @@ class MakeNewEntityClassCliCommand extends Command
             'src/Domain/{ENTITY}/{ENTITY}Entity' => new EntityClass(
                 extends: AbstractMappedEntity::class
             ),
-            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => null,
+            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => new EntityClass(),
+            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => new EntityClass(),
+            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => new EntityClass(),
+            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => new EntityClass(),
             'src/Application/{ENTITY}/{ENTITY}FinderInterface' => new EntityClass(
                 type: 'interface',
             ),
