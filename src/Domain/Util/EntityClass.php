@@ -6,9 +6,19 @@ namespace App\Domain\Util;
 
 class EntityClass
 {
+    /** @var array<string> */
     private array $implements;
+
+    /** @var array<string> */
     private array $extends;
 
+    /**
+     * Undocumented function.
+     *
+     * @param array<string>|string  $implements
+     * @param array<string>|string  $extends
+     * @param array<string, string> $attributes
+     */
     public function __construct(
         public readonly string $template,
         array|string $implements = [],
@@ -50,6 +60,9 @@ class EntityClass
         return implode(','.PHP_EOL, $returnValArr);
     }
 
+    /**
+     * @param array<string> $val
+     */
     private function getVal(string $type, array $val): string
     {
         return $type.' '.implode(', ', $val);

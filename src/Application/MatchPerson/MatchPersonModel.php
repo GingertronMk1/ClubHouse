@@ -20,7 +20,7 @@ class MatchPersonModel extends AbstractMappedModel
         public readonly string $role = ''
     ) {}
 
-    public static function createFromRow(array $row, array $externalServices = []): AbstractMappedModel
+    public static function createFromRow(array $row, array $externalServices = []): self
     {
         self::checkServicesExist($externalServices, [
             MatchFinderInterface::class,

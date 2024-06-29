@@ -17,6 +17,9 @@ class CreateMatchPersonCommandHandler
 
     public function handle(CreateMatchPersonCommand $command): MatchId
     {
+        if (!$command->person) {
+            throw new \Exception();
+        }
         $entity = new MatchPersonEntity(
             $command->match->id,
             $command->person->id,
