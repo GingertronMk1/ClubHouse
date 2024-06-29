@@ -105,7 +105,7 @@ class MakeNewEntityClassCliCommand extends Command
             fwrite($file, $content);
         }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success("Successfully created {$arg1}");
 
         return Command::SUCCESS;
     }
