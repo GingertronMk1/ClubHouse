@@ -93,6 +93,7 @@ class MakeNewEntityClassCliCommand extends Command
             if (!$file) {
                 throw new \Exception("Something's gone wrong");
             }
+            ftruncate($file, 0);
             $content = $this->twig->render(
                 "_util/make-entity/{$information->template}.php.twig",
                 [

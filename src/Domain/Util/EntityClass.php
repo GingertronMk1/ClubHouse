@@ -42,9 +42,8 @@ class EntityClass
     {
         $returnValArr = [];
         foreach ($this->attributes as $attrClass => $attrMod) {
-
             $attrClassBaseName = substr($attrClass, strrpos($attrClass, '\\') + 1);
-            $attrName = '$' . lcfirst($attrClassBaseName);
+            $attrName = '$'.lcfirst($attrClassBaseName);
             $returnValArr[] = "{$attrMod} \\{$attrClass} {$attrName}";
         }
 
@@ -53,6 +52,6 @@ class EntityClass
 
     private function getVal(string $type, array $val): string
     {
-        return $type.' '.implode(', ', $this->implements);
+        return $type.' '.implode(', ', $val);
     }
 }
