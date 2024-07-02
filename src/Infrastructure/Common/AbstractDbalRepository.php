@@ -43,48 +43,92 @@ abstract class AbstractDbalRepository
             ;
         }
 
-        $storeQuery = $connection->createQueryBuilder();
         if ($existsQuery->fetchAssociative()) {
-            $storeQuery
-                ->update($tableName)
-            ;
-            foreach ($idColumn as $colKey => $col) {
-                $storeQuery
-                    ->andWhere("{$col} = :id{$colKey}")
-                    ->setParameter("id{$colKey}", $entityMappedData[$col])
-                ;
-            }
+            return $this->update(
+                $entity,
+                $connection,
+                $tableName,
+                $clock,
+                $idColumn,
+                $externalServices
+            );
+        }
 
-            foreach ($entityMappedData as $column => $value) {
-                $storeQuery
-                    ->set($column, ":{$column}")
-                    ->setParameter($column, $value)
-                ;
-            }
-            if ($clock) {
-                $storeQuery
-                    ->set('updated_at', ':now')
-                ;
-            }
-        } else {
+        return $this->create(
+            $entity,
+            $connection,
+            $tableName,
+            $clock,
+            $externalServices
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $externalServices
+     */
+    private function create(
+        AbstractMappedEntity $entity,
+        Connection $connection,
+        string $tableName,
+        ?ClockInterface $clock = null,
+        array $externalServices = [],
+    ): int {
+        $storeQuery = $connection->createQueryBuilder();
+        $storeQuery
+            ->insert($tableName)
+        ;
+        foreach ($entity->getMappedData($externalServices) as $column => $value) {
             $storeQuery
-                ->insert($tableName)
+                ->setValue($column, ":{$column}")
+                ->setParameter($column, $value)
             ;
-            foreach ($entityMappedData as $column => $value) {
-                $storeQuery
-                    ->setValue($column, ":{$column}")
-                    ->setParameter($column, $value)
-                ;
-            }
-            if ($clock) {
-                $storeQuery
-                    ->setValue('created_at', ':now')
-                    ->setValue('updated_at', ':now')
-                ;
-            }
         }
         if ($clock) {
-            $storeQuery->setParameter('now', (string) $clock->getTime());
+            $storeQuery
+                ->setValue('created_at', ':now')
+                ->setValue('updated_at', ':now')
+                ->setParameter('now', (string) $clock->getTime())
+            ;
+        }
+
+        return (int) $storeQuery->executeStatement();
+    }
+
+    /**
+     * @param array<string>        $idColumn
+     * @param array<string, mixed> $externalServices
+     */
+    private function update(
+        AbstractMappedEntity $entity,
+        Connection $connection,
+        string $tableName,
+        ?ClockInterface $clock = null,
+        array $idColumn = ['id'],
+        array $externalServices = []
+    ): int {
+        $entityMappedData = $entity->getMappedData($externalServices);
+        $storeQuery = $connection->createQueryBuilder();
+        $storeQuery
+            ->update($tableName)
+        ;
+        foreach ($idColumn as $colKey => $col) {
+            $storeQuery
+                ->andWhere("{$col} = :id{$colKey}")
+                ->setParameter("id{$colKey}", $entityMappedData[$col])
+            ;
+        }
+
+        foreach ($entityMappedData as $column => $value) {
+            $storeQuery
+                ->set($column, ":{$column}")
+                ->setParameter($column, $value)
+            ;
+        }
+        if ($clock) {
+            $storeQuery
+                ->set('updated_at', ':now')
+                ->setParameter('now', (string) $clock->getTime())
+            ;
         }
 
         return (int) $storeQuery->executeStatement();
