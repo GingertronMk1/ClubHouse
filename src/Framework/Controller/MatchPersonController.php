@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Framework\Controller;
 
 use App\Application\Match\MatchFinderInterface;
+use App\Application\Match\MatchModel;
 use App\Application\MatchPerson\Command\CreateMatchPersonCommand;
 use App\Application\MatchPerson\CommandHandler\CreateMatchPersonCommandHandler;
 use App\Application\MatchPerson\MatchPersonFinderInterface;
@@ -27,11 +28,10 @@ class MatchPersonController extends AbstractController
         MatchPersonFinderInterface $matchPersonFinder,
         string $matchId,
     ): Response {
-        $matchId = MatchId::fromString($matchId);
-
+        $match = $this->getMatch($matchId);
         return $this->render('match-person/index.html.twig', [
-            'match' => $this->matchFinder->getById($matchId),
-            'people' => $matchPersonFinder->getForMatch($matchId),
+            'match' => $match,
+            'people' => $matchPersonFinder->getForMatch($match->id),
         ]);
     }
 
@@ -41,8 +41,7 @@ class MatchPersonController extends AbstractController
         Request $request,
         string $matchId
     ): Response {
-        $matchId = MatchId::fromString($matchId);
-        $match = $this->matchFinder->getById($matchId);
+        $match = $this->getMatch($matchId);
 
         $command = new CreateMatchPersonCommand($match);
         $form = $this->createForm(CreateMatchPersonFormType::class, $command);
@@ -52,7 +51,7 @@ class MatchPersonController extends AbstractController
             try {
                 $handler->handle($command);
 
-                return $this->redirectToRoute('match.person.index', ['matchId' => (string) $matchId]);
+                return $this->redirectToRoute('match.person.index', ['matchId' => $matchId]);
             } catch (\Throwable $e) {
                 throw new \Exception('Error creating person', previous: $e);
             }
@@ -64,5 +63,11 @@ class MatchPersonController extends AbstractController
                 'form' => $form,
             ]
         );
+    }
+
+    private function getMatch(string $matchId): MatchModel
+    {
+        $matchId = MatchId::fromString($matchId);
+        return $this->matchFinder->getById($matchId);
     }
 }
