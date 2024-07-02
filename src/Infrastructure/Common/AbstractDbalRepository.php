@@ -66,7 +66,7 @@ abstract class AbstractDbalRepository
     /**
      * @param array<string, mixed> $externalServices
      */
-    private function create(
+    protected function create(
         AbstractMappedEntity $entity,
         Connection $connection,
         string $tableName,
@@ -98,7 +98,7 @@ abstract class AbstractDbalRepository
      * @param array<string>        $idColumn
      * @param array<string, mixed> $externalServices
      */
-    private function update(
+    protected function update(
         AbstractMappedEntity $entity,
         Connection $connection,
         string $tableName,
