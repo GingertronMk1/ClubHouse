@@ -6139,16 +6139,16 @@
         },
         {
             "name": "symfony/web-profiler-bundle",
-            "version": "v7.1.1",
+            "version": "v7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-profiler-bundle.git",
-                "reference": "59411acc01052ee3076e2b53cd3707543b68b7ac"
+                "reference": "82b22245d9f3ef8ccb1d55d4e8ade8bc3885c302"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/59411acc01052ee3076e2b53cd3707543b68b7ac",
-                "reference": "59411acc01052ee3076e2b53cd3707543b68b7ac",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/82b22245d9f3ef8ccb1d55d4e8ade8bc3885c302",
+                "reference": "82b22245d9f3ef8ccb1d55d4e8ade8bc3885c302",
                 "shasum": ""
             },
             "require": {
@@ -6200,7 +6200,7 @@
                 "dev"
             ],
             "support": {
-                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.1.1"
+                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.1.2"
             },
             "funding": [
                 {
@@ -6216,7 +6216,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-05-31T14:57:53+00:00"
+            "time": "2024-06-25T19:55:06+00:00"
         },
         {
             "name": "symplify/easy-coding-standard",
