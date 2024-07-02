@@ -29,6 +29,7 @@ class MatchPersonController extends AbstractController
         string $matchId,
     ): Response {
         $match = $this->getMatch($matchId);
+
         return $this->render('match-person/index.html.twig', [
             'match' => $match,
             'people' => $matchPersonFinder->getForMatch($match->id),
@@ -68,6 +69,7 @@ class MatchPersonController extends AbstractController
     private function getMatch(string $matchId): MatchModel
     {
         $matchId = MatchId::fromString($matchId);
+
         return $this->matchFinder->getById($matchId);
     }
 }
