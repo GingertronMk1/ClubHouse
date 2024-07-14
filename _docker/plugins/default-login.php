@@ -35,8 +35,11 @@ class DefaultLogin
         return 0;
     }
 
-    public function loginFormField(string $name, string $envValue = '', string $value = ''): string
-    {
+    public function loginFormField(
+        string $name,
+        string $envValue = '',
+        string $value = ''
+    ): string {
         $inputValue = $value;
         if (!empty($envValue) && isset($_ENV[$envValue])) {
             $inputValue = $_ENV[$envValue];

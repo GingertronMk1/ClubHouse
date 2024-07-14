@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route(path: '/match', name: 'match.')]
 class MatchController extends AbstractController
@@ -56,7 +57,7 @@ class MatchController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/update/{matchId}', name: 'update')]
+    #[Route(path: '/update/{matchId}', name: 'update', requirements: ['matchId' => Requirement::UUID_V7])]
     public function update(
         UpdateMatchCommandHandler $handler,
         MatchFinderInterface $matchFinder,
