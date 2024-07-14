@@ -67,7 +67,7 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
     /**
      * @deprecated since Symfony 5.3, loadUserByIdentifier() is used instead
      */
-    public function loadUserByUsername($username): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }
