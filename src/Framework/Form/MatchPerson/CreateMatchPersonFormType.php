@@ -52,16 +52,6 @@ class CreateMatchPersonFormType extends AbstractType
                     'choice_label' => 'name',
                 ]
             )->add(
-                'match',
-                ChoiceType::class,
-                [
-                    'placeholder' => 'Choose the person',
-                    'choices' => $this->matchFinder->getAll(),
-                    'choice_value' => 'id',
-                    'choice_label' => 'name',
-                ]
-            )
-            ->add(
                 'role',
                 TextType::class,
                 [
