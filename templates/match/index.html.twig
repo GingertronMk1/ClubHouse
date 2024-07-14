@@ -7,8 +7,8 @@
 {% block body %}
     {% set people = people|default([]) %}
 
-    <a class="match__create-link" href="{{ path('match.create') }}">New</a>
-    <table class="match__table">
+    <a class="btn btn-primary" href="{{ path('match.create') }}">New</a>
+    <table class="table">
             <tr>
                 <th>Match Name</th>
                 <th>Details</th>
@@ -31,8 +31,8 @@
             <td>{{ match.createdAt|date('Y-m-d H:i:s') }}</td>
             <td>{{ match.updatedAt|date('Y-m-d H:i:s') }}</td>
             <td>
-                <a href="{{ path('match.update', {matchId: match.id}) }}">Edit</a>
-                <a href="{{ path('match.person.index', {matchId: match.id}) }}">View Players</a>
+                <a class="btn btn-primary" href="{{ path('match.update', {matchId: match.id}) }}">Edit</a>
+                <a class="btn btn-primary" href="{{ path('match.person.index', {matchId: match.id}) }}">View Players</a>
             </td>
         </tr>
     {% endfor %}
