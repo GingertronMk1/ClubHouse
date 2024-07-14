@@ -13,7 +13,8 @@ class UpdatePersonCommandHandler
 {
     public function __construct(
         private readonly PersonRepositoryInterface $personRepository
-    ) {}
+    ) {
+    }
 
     public function handle(UpdatePersonCommand $command): PersonId
     {

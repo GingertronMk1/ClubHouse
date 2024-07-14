@@ -6,5 +6,7 @@ namespace App\Application\MatchPerson\Command;
 
 class UpdateMatchPersonCommand
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

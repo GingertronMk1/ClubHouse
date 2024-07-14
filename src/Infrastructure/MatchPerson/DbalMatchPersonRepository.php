@@ -16,7 +16,8 @@ class DbalMatchPersonRepository extends AbstractDbalRepository implements MatchP
     public function __construct(
         private readonly Connection $connection,
         private readonly ClockInterface $clockInterface
-    ) {}
+    ) {
+    }
 
     public function store(MatchPersonEntity $entity): MatchId
     {

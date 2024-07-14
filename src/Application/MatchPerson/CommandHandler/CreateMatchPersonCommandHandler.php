@@ -13,7 +13,8 @@ class CreateMatchPersonCommandHandler
 {
     public function __construct(
         private readonly MatchPersonRepositoryInterface $matchPersonRepository
-    ) {}
+    ) {
+    }
 
     public function handle(CreateMatchPersonCommand $command): MatchId
     {

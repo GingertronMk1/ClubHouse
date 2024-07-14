@@ -16,7 +16,8 @@ class DbalMatchRepository extends AbstractDbalRepository implements MatchReposit
     public function __construct(
         private readonly Connection $connection,
         private readonly ClockInterface $clockInterface,
-    ) {}
+    ) {
+    }
 
     public function generateId(): MatchId
     {

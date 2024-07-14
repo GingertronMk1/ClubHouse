@@ -21,7 +21,8 @@ class DbalMatchPersonFinder implements MatchPersonFinderInterface
         private readonly Connection $connection,
         private readonly MatchFinderInterface $matchFinder,
         private readonly PersonFinderInterface $personFinder
-    ) {}
+    ) {
+    }
 
     public function getByIds(MatchId $matchId, PersonId $personId): MatchPersonModel
     {

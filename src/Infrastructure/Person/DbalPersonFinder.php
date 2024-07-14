@@ -21,7 +21,8 @@ class DbalPersonFinder implements PersonFinderInterface
         private readonly Connection $connection,
         private readonly UserFinderInterface $userFinder,
         private readonly LoggerInterface $logger
-    ) {}
+    ) {
+    }
 
     public function getById(PersonId $id): PersonModel
     {

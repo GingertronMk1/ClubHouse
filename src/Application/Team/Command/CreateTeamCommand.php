@@ -15,5 +15,6 @@ class CreateTeamCommand
         public string $name = '',
         public string $description = '',
         public array $people = []
-    ) {}
+    ) {
+    }
 }

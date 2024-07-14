@@ -13,7 +13,8 @@ class UpdateSportCommand
         public SportId $id,
         public string $name,
         public ?string $description,
-    ) {}
+    ) {
+    }
 
     public static function fromModel(SportModel $model): self
     {

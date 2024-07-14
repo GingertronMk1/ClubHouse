@@ -6,4 +6,6 @@ namespace App\Domain\Team\ValueObject;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
 
-class TeamId extends AbstractUuidId {}
+class TeamId extends AbstractUuidId
+{
+}

@@ -18,7 +18,8 @@ class TeamEntity extends AbstractMappedEntity
         public readonly string $name,
         public readonly string $description,
         public readonly array $peopleIds
-    ) {}
+    ) {
+    }
 
     public function getMappedData(array $externalServices = []): array
     {

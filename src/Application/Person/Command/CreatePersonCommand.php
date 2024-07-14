@@ -11,5 +11,6 @@ class CreatePersonCommand
     public function __construct(
         public string $name = '',
         public ?UserModel $user = null
-    ) {}
+    ) {
+    }
 }

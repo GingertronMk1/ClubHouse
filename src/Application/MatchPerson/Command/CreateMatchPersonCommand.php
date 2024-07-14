@@ -13,5 +13,6 @@ class CreateMatchPersonCommand
         public MatchModel $match,
         public ?PersonModel $person = null,
         public ?string $role = ''
-    ) {}
+    ) {
+    }
 }

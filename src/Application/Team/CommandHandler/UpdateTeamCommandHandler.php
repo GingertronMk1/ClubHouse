@@ -14,7 +14,8 @@ class UpdateTeamCommandHandler
 {
     public function __construct(
         private readonly TeamRepositoryInterface $teamRepository
-    ) {}
+    ) {
+    }
 
     public function handle(UpdateTeamCommand $command): TeamId
     {

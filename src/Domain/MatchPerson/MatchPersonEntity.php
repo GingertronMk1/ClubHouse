@@ -14,7 +14,8 @@ class MatchPersonEntity extends AbstractMappedEntity
         public readonly MatchId $matchId,
         public readonly PersonId $personId,
         public readonly ?string $role = ''
-    ) {}
+    ) {
+    }
 
     public function getMappedData(array $externalServices = []): array
     {

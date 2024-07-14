@@ -27,7 +27,8 @@ class MatchModel extends AbstractMappedModel
         public readonly DateTime $createdAt,
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,
-    ) {}
+    ) {
+    }
 
     public static function createFromRow(array $row, array $externalServices = []): self
     {

@@ -16,7 +16,8 @@ class UpdateMatchPersonFormType extends AbstractType
     public function __construct(
         private readonly PersonFinderInterface $personFinder,
         private readonly MatchFinderInterface $matchFinder
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -19,7 +19,8 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
         private readonly Connection $connection,
         private readonly ClockInterface $clock,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function generateId(): TeamId
     {

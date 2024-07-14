@@ -14,7 +14,8 @@ class UpdateMatchCommandHandler
 {
     public function __construct(
         private readonly MatchRepositoryInterface $matchRepository
-    ) {}
+    ) {
+    }
 
     public function handle(UpdateMatchCommand $command): MatchId
     {

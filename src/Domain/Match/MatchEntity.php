@@ -20,7 +20,8 @@ class MatchEntity extends AbstractMappedEntity
         public readonly ?TeamId $team1Id,
         public readonly ?TeamId $team2Id,
         public readonly ?SportId $sportId
-    ) {}
+    ) {
+    }
 
     public function getMappedData(array $externalServices = []): array
     {

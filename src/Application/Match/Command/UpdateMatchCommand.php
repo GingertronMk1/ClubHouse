@@ -19,7 +19,8 @@ class UpdateMatchCommand
         public ?TeamModel $team1,
         public ?TeamModel $team2,
         public ?SportModel $sport
-    ) {}
+    ) {
+    }
 
     public static function fromModel(MatchModel $match): self
     {

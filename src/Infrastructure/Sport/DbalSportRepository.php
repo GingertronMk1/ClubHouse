@@ -16,7 +16,8 @@ class DbalSportRepository extends AbstractDbalRepository implements SportReposit
     public function __construct(
         private readonly Connection $connection,
         private readonly ClockInterface $clock,
-    ) {}
+    ) {
+    }
 
     public function generateId(): SportId
     {

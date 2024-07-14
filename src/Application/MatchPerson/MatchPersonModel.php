@@ -18,7 +18,8 @@ class MatchPersonModel extends AbstractMappedModel
         public readonly MatchModel $match,
         public readonly PersonModel $person,
         public readonly string $role = ''
-    ) {}
+    ) {
+    }
 
     public static function createFromRow(array $row, array $externalServices = []): self
     {

@@ -26,7 +26,8 @@ class MatchPersonController extends AbstractController
 {
     public function __construct(
         private readonly MatchFinderInterface $matchFinder
-    ) {}
+    ) {
+    }
 
     #[Route(path: '/', name: 'index')]
     public function index(

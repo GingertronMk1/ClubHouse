@@ -14,7 +14,8 @@ class UpdatePersonCommand
         public PersonId $id,
         public string $name,
         public ?UserModel $user
-    ) {}
+    ) {
+    }
 
     public static function fromPerson(PersonModel $person): self
     {

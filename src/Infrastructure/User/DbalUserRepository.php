@@ -16,7 +16,8 @@ class DbalUserRepository extends AbstractDbalRepository implements UserRepositor
         private readonly Connection $connection,
         private readonly UserPasswordHasherInterface $hasher,
         private readonly ClockInterface $clock
-    ) {}
+    ) {
+    }
 
     public function generateId(): UserId
     {

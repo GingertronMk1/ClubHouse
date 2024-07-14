@@ -10,7 +10,8 @@ abstract class AbstractUuidId extends AbstractId
 {
     final protected function __construct(
         private readonly UuidV7 $uuid
-    ) {}
+    ) {
+    }
 
     /**
      * Get a string representation of this object.

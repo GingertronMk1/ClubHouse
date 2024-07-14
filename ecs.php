@@ -16,6 +16,8 @@ return ECSConfig::configure()
     ])
     // add sets - group of rules
     ->withPhpCsFixerSets(
-        phpCsFixer: true
+        phpCsFixer: true,
+        psr12: true,
+        symfony: true
     )
 ;

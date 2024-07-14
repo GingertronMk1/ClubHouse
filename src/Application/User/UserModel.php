@@ -18,7 +18,8 @@ class UserModel extends AbstractMappedModel
         public readonly UserId $id,
         public readonly string $email,
         public readonly array $roles,
-    ) {}
+    ) {
+    }
 
     public static function createFromRow(array $row, array $externalServices = []): self
     {
