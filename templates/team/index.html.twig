@@ -7,8 +7,8 @@
 {% block body %}
     {% set people = people|default([]) %}
 
-    <a class="people__create-link" href="{{ path('team.create') }}">New</a>
-    <table class="people__table">
+    <a class="btn btn-primary" href="{{ path('team.create') }}">New</a>
+    <table class="table">
             <tr>
                 <th>Team Name</th>
                 <th>Description</th>
@@ -22,8 +22,8 @@
             <td>{{ team.name }}</td>
             <td>{{ team.description }}</td>
             <td>{{ team.people|map(p => p.name)|join(', ') }}</td>
-            <td>{{ team.createdAt }}</td>
-            <td>{{ team.updatedAt }}</td>
+            <td>{{ team.createdAt|date('Y-m-d H:i:s') }}</td>
+            <td>{{ team.updatedAt|date('Y-m-d H:i:s') }}</td>
             <td><a href="{{ path('team.update', {teamId: team.id}) }}">Edit</a></td>
         </tr>
     {% endfor %}

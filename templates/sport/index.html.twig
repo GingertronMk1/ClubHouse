@@ -7,22 +7,22 @@
 {% block body %}
     {% set people = people|default([]) %}
 
-    <a class="sport__create-link" href="{{ path('sport.create') }}">New</a>
-    <table class="sport__table">
-            <tr>
-                <th>Sport Name</th>
-                <th>Description</th>
-                <th>Created At</th>
-                <th>Last Updated At</th>
-                <th>Actions</th>
-            </tr>
+    <a class="btn btn-primary" href="{{ path('sport.create') }}">New</a>
+    <table class="table">
+        <tr>
+            <th width="15%">Sport Name</th >
+            <th width="40%">Description</th >
+            <th width="17.5%">Created At</th>
+            <th width="17.5%">Last Updated At</th>
+            <th width="10%"">Actions</th>
+        </tr>
     {% for sport in sports %}
         <tr data-sport-id="{{ sport.id }}">
             <td>{{ sport.name }}</td>
             <td>{{ sport.description }}</td>
-            <td>{{ sport.createdAt }}</td>
-            <td>{{ sport.updatedAt }}</td>
-            <td><a href="{{ path('sport.update', {sportId: sport.id}) }}">Edit</a></td>
+            <td>{{ sport.createdAt|date('Y-m-d H:i:s') }}</td>
+            <td>{{ sport.updatedAt|date('Y-m-d H:i:s') }}</td>
+            <td><a href="{{ path('sport.update', {sportId: sport.id}) }}">Edit</a></td >
         </tr>
     {% endfor %}
     </table>

@@ -17,7 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 
-#[Route(path: '/match/{matchId}/person', name: 'match.person.', requirements: ['matchId' => Requirement::UUID_V7])]
+#[Route(
+    path: '/match/{matchId}/person',
+    name: 'match.person.',
+    requirements: ['matchId' => Requirement::UUID_V7]
+)]
 class MatchPersonController extends AbstractController
 {
     public function __construct(
