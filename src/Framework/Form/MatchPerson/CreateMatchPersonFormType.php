@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Framework\Form\MatchPerson;
 
-use App\Application\Match\MatchFinderInterface;
 use App\Application\Match\MatchModel;
 use App\Application\Person\PersonFinderInterface;
 use Symfony\Component\Form\AbstractType;
@@ -18,7 +17,6 @@ class CreateMatchPersonFormType extends AbstractType
 {
     public function __construct(
         private readonly PersonFinderInterface $personFinder,
-        private readonly MatchFinderInterface $matchFinder
     ) {
     }
 
