@@ -13,26 +13,22 @@
     }
 ] %}
 
-<nav class="nav">
-    <div class="nav__inner">
-        <div class="nav__nav-links">
-            {% for link in navLinks %}
-            <a href="{{ path(link.route) }}">
-                {{ link.text }}
-            </a>
-            {% endfor %}
-        </div>
-        <div class="nav__account-buttons">
-            {% if app.user %}
-                <span class="nav__user-button">
-                    {{ app.user.email }}
-                </span>
-                <a href="{{ path('app_logout') }}">Log Out</a>
-            {% else %}
-                <a href="{{ path('app_login') }}">Log In</a>
-                <a href="{{ path('app_register') }}">Register</a>
-            {% endif %}
-            </span>
-        </div>
+<nav class="navbar navbar-expand-lg bg-primary text-white">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ path('home') }}">
+        <i class="fa-solid fa-football"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+
+        {% for link in navLinks %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path(link.route) }}">{{ link.text }}</a>
+        </li>
+        {% endfor %}
+      </ul>
     </div>
 </nav>
