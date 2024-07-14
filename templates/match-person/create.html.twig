@@ -3,5 +3,9 @@
 {% block title %}Create Person{% endblock %}
 
 {% block body %}
-{{ form(form) }}
+<h1>Add person to match between
+    {{ match.team1 ? match.team1.name : '`Unknown`'}} and
+    {{ match.team2 ? match.team2.name : '`Unknown`'}}
+</h1>
+    {{ form(form) }}
 {% endblock %}

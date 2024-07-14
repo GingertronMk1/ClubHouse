@@ -51,7 +51,7 @@ class MatchPersonController extends AbstractController
         $match = $this->getMatch($matchId);
 
         $command = new CreateMatchPersonCommand($match);
-        $form = $this->createForm(CreateMatchPersonFormType::class, $command);
+        $form = $this->createForm(CreateMatchPersonFormType::class, $command, ['match' => $match]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -65,9 +65,10 @@ class MatchPersonController extends AbstractController
         }
 
         return $this->render(
-            'person/create.html.twig',
+            'match-person/create.html.twig',
             [
                 'form' => $form,
+                'match' => $match,
             ]
         );
     }
