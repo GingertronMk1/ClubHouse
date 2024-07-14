@@ -18,7 +18,8 @@ class UpdateTeamCommand
         public string $name,
         public string $description,
         public array $people,
-    ) {}
+    ) {
+    }
 
     public static function fromTeam(TeamModel $team): self
     {

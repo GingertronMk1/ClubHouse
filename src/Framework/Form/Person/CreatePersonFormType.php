@@ -16,7 +16,8 @@ class CreatePersonFormType extends AbstractType
 {
     public function __construct(
         private readonly UserFinderInterface $userFinder
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

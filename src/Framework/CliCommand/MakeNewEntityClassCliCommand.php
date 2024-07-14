@@ -6,6 +6,7 @@ use App\Application\Common\AbstractMappedModel;
 use App\Application\Common\Service\ClockInterface;
 use App\Domain\Common\AbstractMappedEntity;
 use App\Domain\Common\ValueObject\AbstractUuidId;
+use App\Domain\Util\EntityClass;
 use App\Infrastructure\Common\AbstractDbalRepository;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Twig\Environment;
 
 #[AsCommand(
     name: 'app:make-new-entity-class',
@@ -24,15 +26,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 )]
 class MakeNewEntityClassCliCommand extends Command
 {
-    private const INFORMATION_ATTRIBUTES_STRING = 'attributes';
-    private const INFORMATION_IMPLEMENTS_STRING = 'implements';
-    private const INFORMATION_EXTENDS_STRING = 'extends';
-    private const INFORMATION_TYPE_STRING = 'type';
-
     private const NAME_ARG = 'className';
 
     public function __construct(
-        private readonly KernelInterface $kernel
+        private readonly KernelInterface $kernel,
+        private readonly Environment $twig,
     ) {
         parent::__construct();
     }
@@ -83,27 +81,6 @@ class MakeNewEntityClassCliCommand extends Command
 
             $dir = substr($replacedFileName, 0, $fileDelimiter);
 
-            $extendsImplements = '';
-            if (isset($information[self::INFORMATION_EXTENDS_STRING])) {
-                $extendsImplements .= " extends \\{$information[self::INFORMATION_EXTENDS_STRING]}";
-            }
-
-            if (isset($information[self::INFORMATION_IMPLEMENTS_STRING])) {
-                $extendsImplements .= " implements \\{$information[self::INFORMATION_IMPLEMENTS_STRING]}";
-            }
-
-            $attributes = [];
-            if (isset($information[self::INFORMATION_ATTRIBUTES_STRING])) {
-                foreach ($information[self::INFORMATION_ATTRIBUTES_STRING] as $attrClass => $attrModifiers) {
-                    $attrName = lcfirst(substr($attrClass, strrpos($attrClass, '\\') + 1));
-                    $attributes[] = "{$attrModifiers} \\{$attrClass} \${$attrName},";
-                }
-            }
-
-            $attributes = implode(PHP_EOL, $attributes);
-
-            $type = $information[self::INFORMATION_TYPE_STRING] ?? 'class';
-
             try {
                 $io->info("Creating `{$dir}`");
                 mkdir($dir, recursive: true);
@@ -116,76 +93,88 @@ class MakeNewEntityClassCliCommand extends Command
             if (!$file) {
                 throw new \Exception("Something's gone wrong");
             }
-            fwrite($file, <<<EOF
-            <?php
+            ftruncate($file, 0);
+            $content = $this->twig->render(
+                "_util/make-entity/{$information->template}.php.twig",
+                [
+                    'className' => $className,
+                    'nameSpace' => $nameSpace,
+                    'entity' => $information,
+                ]
+            );
 
-            declare(strict_types=1);
-
-            namespace {$nameSpace};
-
-            {$type} {$className}{$extendsImplements}
-            {
-                public function __construct(
-                    {$attributes}
-                )
-                {
-                }
-            }
-            
-            EOF);
+            fwrite($file, $content);
         }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success("Successfully created {$arg1}");
 
         return Command::SUCCESS;
     }
 
     /**
-     * @return array<string, ?array<mixed>>
+     * @return array<string, EntityClass>
      */
     private function getClassFileNames(): array
     {
         return [
-            'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractUuidId::class,
-            ],
-            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => [
-                self::INFORMATION_TYPE_STRING => 'interface',
-            ],
-            'src/Domain/{ENTITY}/{ENTITY}Entity' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractMappedEntity::class,
-            ],
-            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => null,
-            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => null,
-            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => [
-                self::INFORMATION_TYPE_STRING => 'interface',
-            ],
-            'src/Application/{ENTITY}/{ENTITY}Model' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractMappedModel::class,
-            ],
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => [
-                self::INFORMATION_ATTRIBUTES_STRING => [
+            'src/Domain/{ENTITY}/ValueObject/{ENTITY}Id' => new EntityClass(
+                'id',
+                extends: AbstractUuidId::class,
+            ),
+            'src/Domain/{ENTITY}/{ENTITY}RepositoryInterface' => new EntityClass(
+                'repository-interface',
+                type: 'interface'
+            ),
+            'src/Domain/{ENTITY}/{ENTITY}Entity' => new EntityClass(
+                'entity',
+                extends: AbstractMappedEntity::class
+            ),
+            'src/Application/{ENTITY}/Command/Create{ENTITY}Command' => new EntityClass(
+                'create-command'
+            ),
+            'src/Application/{ENTITY}/Command/Update{ENTITY}Command' => new EntityClass(
+                'update-command'
+            ),
+            'src/Application/{ENTITY}/CommandHandler/Create{ENTITY}CommandHandler' => new EntityClass(
+                'create-command-handler'
+            ),
+            'src/Application/{ENTITY}/CommandHandler/Update{ENTITY}CommandHandler' => new EntityClass(
+                'update-command-handler'
+            ),
+            'src/Application/{ENTITY}/{ENTITY}FinderInterface' => new EntityClass(
+                'finder-interface',
+                type: 'interface',
+            ),
+            'src/Application/{ENTITY}/{ENTITY}Model' => new EntityClass(
+                'model',
+                extends: AbstractMappedModel::class,
+            ),
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Finder' => new EntityClass(
+                'dbal-finder',
+                attributes: [
                     Connection::class => 'private readonly',
-                ],
-            ],
-            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractDbalRepository::class,
-                self::INFORMATION_ATTRIBUTES_STRING => [
+                ]
+            ),
+            'src/Infrastructure/{ENTITY}/Dbal{ENTITY}Repository' => new EntityClass(
+                'dbal-repository',
+                extends: AbstractDbalRepository::class,
+                attributes: [
                     Connection::class => 'private readonly',
                     ClockInterface::class => 'private readonly',
-                ],
-            ],
-            'src/Framework/Controller/{ENTITY}Controller' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractController::class,
-            ],
-            'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
-            ],
-            'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => [
-                self::INFORMATION_EXTENDS_STRING => AbstractType::class,
-            ],
+                ]
+            ),
+            'src/Framework/Controller/{ENTITY}Controller' => new EntityClass(
+                'controller',
+                extends: AbstractController::class
+            ),
+            'src/Framework/Form/{ENTITY}/Create{ENTITY}FormType' => new EntityClass(
+                'create-form',
+                extends: AbstractType::class
+            ),
+            'src/Framework/Form/{ENTITY}/Update{ENTITY}FormType' => new EntityClass(
+                'update-form',
+                extends: AbstractType::class
+            ),
         ];
     }
 }

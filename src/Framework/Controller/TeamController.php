@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route(path: '/team', name: 'team.')]
 class TeamController extends AbstractController
@@ -56,7 +57,7 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/update/{teamId}', name: 'update')]
+    #[Route(path: '/update/{teamId}', name: 'update', requirements: ['teamId' => Requirement::UUID_V7])]
     public function update(
         UpdateTeamCommandHandler $handler,
         TeamFinderInterface $teamFinder,

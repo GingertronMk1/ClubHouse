@@ -22,7 +22,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
         private readonly Connection $connection
-    ) {}
+    ) {
+    }
 
     /**
      * Symfony calls this method if you use features like switch_user
@@ -65,10 +66,8 @@ class UserProvider implements UserProviderInterface, PasswordUpgraderInterface
 
     /**
      * @deprecated since Symfony 5.3, loadUserByIdentifier() is used instead
-     *
-     * @param mixed $username
      */
-    public function loadUserByUsername($username): UserInterface
+    public function loadUserByUsername(string $username): UserInterface
     {
         return $this->loadUserByIdentifier($username);
     }

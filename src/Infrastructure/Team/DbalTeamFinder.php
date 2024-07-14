@@ -20,7 +20,8 @@ class DbalTeamFinder implements TeamFinderInterface
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
         private readonly PersonFinderInterface $personFinder
-    ) {}
+    ) {
+    }
 
     public function getById(TeamId $id): TeamModel
     {

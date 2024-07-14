@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route(path: '/sport', name: 'sport.')]
 class SportController extends AbstractController
@@ -56,7 +57,7 @@ class SportController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/update/{sportId}', name: 'update')]
+    #[Route(path: '/update/{sportId}', name: 'update', requirements: ['sportId' => Requirement::UUID_V7])]
     public function update(
         UpdateSportCommandHandler $handler,
         SportFinderInterface $sportFinder,

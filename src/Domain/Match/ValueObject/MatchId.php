@@ -6,4 +6,6 @@ namespace App\Domain\Match\ValueObject;
 
 use App\Domain\Common\ValueObject\AbstractUuidId;
 
-class MatchId extends AbstractUuidId {}
+class MatchId extends AbstractUuidId
+{
+}

@@ -22,7 +22,8 @@ class UserEntity extends AbstractMappedEntity implements UserInterface, Password
         public readonly string $email,
         public readonly string $password,
         public readonly array $roles,
-    ) {}
+    ) {
+    }
 
     public function getRoles(): array
     {

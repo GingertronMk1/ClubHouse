@@ -16,7 +16,8 @@ class UpdateTeamFormType extends AbstractType
 {
     public function __construct(
         private readonly PersonFinderInterface $personFinder
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

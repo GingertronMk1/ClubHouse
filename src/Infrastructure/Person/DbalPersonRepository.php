@@ -16,7 +16,8 @@ class DbalPersonRepository extends AbstractDbalRepository implements PersonRepos
     public function __construct(
         private readonly Connection $connection,
         private readonly ClockInterface $clock
-    ) {}
+    ) {
+    }
 
     public function generateId(): PersonId
     {

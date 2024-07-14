@@ -16,5 +16,6 @@ class CreateMatchCommand
         public ?TeamModel $team1 = null,
         public ?TeamModel $team2 = null,
         public ?SportModel $sport = null
-    ) {}
+    ) {
+    }
 }

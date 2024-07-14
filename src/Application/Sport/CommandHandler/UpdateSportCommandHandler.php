@@ -13,7 +13,8 @@ class UpdateSportCommandHandler
 {
     public function __construct(
         private readonly SportRepositoryInterface $sportRepository
-    ) {}
+    ) {
+    }
 
     public function handle(UpdateSportCommand $command): SportId
     {

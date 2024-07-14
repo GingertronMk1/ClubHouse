@@ -18,9 +18,7 @@ class DateTime implements \Stringable
         string $date
     ) {
         if (!\DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $date)) {
-            throw new \InvalidArgumentException(
-                'Invalid date provided: '.$date.'. Format: '.self::FORMAT_MICROSECONDS.'.'
-            );
+            throw new \InvalidArgumentException('Invalid date provided: '.$date.'. Format: '.self::FORMAT_MICROSECONDS.'.');
         }
 
         $this->date = $date;
@@ -47,11 +45,7 @@ class DateTime implements \Stringable
             false !== \DateTimeImmutable::createFromFormat(self::FORMAT_MICROSECONDS, $dateString) => self::FORMAT_MICROSECONDS,
             false !== \DateTimeImmutable::createFromFormat(self::FORMAT_MILLISECONDS, $dateString) => self::FORMAT_MILLISECONDS,
             false !== \DateTimeImmutable::createFromFormat(self::FORMAT_SECONDS, $dateString) => self::FORMAT_SECONDS,
-            default => throw new \InvalidArgumentException(sprintf(
-                'Invalid date provided: %s. Format: %s.',
-                $dateString,
-                self::FORMAT_MICROSECONDS
-            )),
+            default => throw new \InvalidArgumentException(sprintf('Invalid date provided: %s. Format: %s.', $dateString, self::FORMAT_MICROSECONDS)),
         };
 
         $dateTimeImmutable = \DateTimeImmutable::createFromFormat($dateFormat, $dateString);

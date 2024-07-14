@@ -14,7 +14,8 @@ class PersonEntity extends AbstractMappedEntity
         public readonly PersonId $id,
         public readonly string $name,
         public readonly ?UserId $userId
-    ) {}
+    ) {
+    }
 
     public function getMappedData(array $externalServices = []): array
     {

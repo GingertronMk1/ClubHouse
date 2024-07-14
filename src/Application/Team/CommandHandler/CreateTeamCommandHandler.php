@@ -13,7 +13,8 @@ class CreateTeamCommandHandler
 {
     public function __construct(
         private readonly TeamRepositoryInterface $teamRepository
-    ) {}
+    ) {
+    }
 
     public function handle(CreateTeamCommand $command): TeamId
     {

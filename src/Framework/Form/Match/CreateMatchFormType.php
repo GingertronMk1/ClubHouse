@@ -19,7 +19,8 @@ class CreateMatchFormType extends AbstractType
     public function __construct(
         private readonly TeamFinderInterface $teamFinder,
         private readonly SportFinderInterface $sportFinder
-    ) {}
+    ) {
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

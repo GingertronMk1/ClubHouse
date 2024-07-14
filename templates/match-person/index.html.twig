@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ClubHouse{% endblock %}
+
+{% block classes %}people{% endblock %}
+
+{% block body %}
+<span class="d-flex flex-row">
+    <h1>{{ match.name }}</h1>
+    <a class="btn btn-primary ms-auto my-auto" href="{{ path('match.person.create', {matchId: match.id}) }}">
+        Add Person
+    </a>
+</span>
+<h3>{{ match.team1 ? match.team1.name ?? '`Unknown`' }} vs {{ match.team2 ? match.team2.name ?? '`Unknown`' }}</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Person</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    {% for person in people %}
+        <tr>
+            <td>{{ person.person.name }}</td>
+            <td>{{ person.role ? person.role : 'Unknown' }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}

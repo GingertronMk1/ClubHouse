@@ -22,7 +22,8 @@ class DbalMatchFinder implements MatchFinderInterface
         private readonly LoggerInterface $logger,
         private readonly SportFinderInterface $sportFinder,
         private readonly TeamFinderInterface $teamFinder,
-    ) {}
+    ) {
+    }
 
     public function getById(MatchId $id): MatchModel
     {

@@ -13,7 +13,8 @@ class SportEntity extends AbstractMappedEntity
         public readonly SportId $id,
         public readonly string $name,
         public readonly ?string $description
-    ) {}
+    ) {
+    }
 
     public function getMappedData(array $externalServices = []): array
     {

@@ -1,94 +1,11 @@
-* {
-    box-sizing: border-box;
-    font-family: sans-serif;
-}
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 
-@mixin container() {
-    > * {
-        width: 95%;
-        max-width: 1600px;
-        margin: 0 auto;
-        padding: 0 1rem;
-    }
-}
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-width: 100%;
-    min-height: 100%;
-    flex: 1;
-}
+$primary: #a54499;
+$secondary: #ffc425;
 
-body {
-    background-color: lightgray;
-}
-
-.main {
-    @include container;
-
-    flex: 1;
-    min-height: 1px;
-
-    display: flex;
-    flex-direction: column;
-
-    &__inner {
-        padding: 1rem;
-        flex: 1;
-        min-height: 1px;
-    }
-}
-
-/**
- *  Navbar
- */
-
-.nav {
-    display: flex;
-    flex-direction: row;
-    @include container;
-    background-color: #6495ed;
-
-    &__inner {
-        display: flex;
-        flex-direction: row;
-        padding: 1rem;
-    }
-
-    &__account-buttons {
-        margin-left: auto;
-    }
-
-    &__nav-links {
-        > a + a {
-            margin-left: 0.5rem;
-        }
-    }
-}
-
-/**
- *  People pages
- */
-
-.people {
-    &__create-link {
-        margin-bottom: 1rem;
-        display: block;
-    }
-
-    &__table {
-        width: 100%;
-
-        th, td {
-            padding: 0.2rem 0.5rem;
-        }
-
-        tr:nth-child(2n) {
-            background-color: white;
-        }
-    }
-}
+@import "~bootstrap/scss/bootstrap";
