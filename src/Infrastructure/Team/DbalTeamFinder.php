@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Team;
 
-use App\Application\Person\PersonFinderInterface;
+use App\Application\Sport\SportFinderInterface;
 use App\Application\Team\TeamFinderInterface;
 use App\Application\Team\TeamModel;
+use App\Domain\Common\ValueObject\DateTime;
+use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -19,7 +21,7 @@ class DbalTeamFinder implements TeamFinderInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
-        private readonly PersonFinderInterface $personFinder
+        private readonly SportFinderInterface $sportFinder
     ) {
     }
 
@@ -73,13 +75,56 @@ class DbalTeamFinder implements TeamFinderInterface
         return $returnVal;
     }
 
+    public function getForSport(SportId $id): array
+    {
+        $query = $this->connection->createQueryBuilder();
+        $query
+            ->select('*')
+            ->from(self::TABLE_NAME)
+            ->orderBy('id')
+            ->where('sport_id = :sport_id')
+            ->setParameter('sport_id', (string) $id)
+        ;
+
+        $result = $query->fetchAllAssociative();
+
+        $returnVal = [];
+
+        foreach ($result as $row) {
+            try {
+                $returnVal[] = $this->createFromRow($row);
+            } catch (\Throwable $e) {
+                $this->logger->error($e->getMessage());
+                throw $e;
+            }
+        }
+
+        return $returnVal;
+    }
+
     /**
      * @param array<string, mixed> $row
      */
     private function createFromRow(array $row): TeamModel
     {
-        return TeamModel::createFromRow($row, [
-            PersonFinderInterface::class => $this->personFinder,
-        ]);
+        $this->sportFinder->setRelationshipGetting(false);
+        $deletedAt = null;
+        if (isset($row['deleted_at'])) {
+            $deletedAt = DateTime::fromString($row['deleted_at']);
+        }
+
+        $teamId = TeamId::fromString($row['id']);
+
+        $sport = $this->sportFinder->getById(SportId::fromString($row['sport_id']));
+
+        return new TeamModel(
+            $teamId,
+            $row['name'],
+            $row['description'],
+            $sport,
+            DateTime::fromString($row['created_at']),
+            DateTime::fromString($row['updated_at']),
+            $deletedAt
+        );
     }
 }

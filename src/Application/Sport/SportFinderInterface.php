@@ -10,6 +10,8 @@ interface SportFinderInterface
 {
     public function getById(SportId $id): SportModel;
 
+    public function setRelationshipGetting(bool $set = true): void;
+
     /**
      * @param array<SportId> $sportIds
      *

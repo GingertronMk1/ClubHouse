@@ -6,20 +6,19 @@ namespace App\Application\Team;
 
 use App\Application\Common\AbstractMappedModel;
 use App\Application\Person\PersonFinderInterface;
-use App\Application\Person\PersonModel;
+use App\Application\Sport\SportFinderInterface;
+use App\Application\Sport\SportModel;
 use App\Domain\Common\ValueObject\DateTime;
+use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
 
 class TeamModel extends AbstractMappedModel
 {
-    /**
-     * @param array<PersonModel> $people
-     */
     public function __construct(
         public readonly TeamId $id,
         public readonly string $name,
         public readonly string $description,
-        public readonly array $people,
+        public readonly SportModel $sport,
         public readonly DateTime $createdAt,
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,
@@ -31,7 +30,7 @@ class TeamModel extends AbstractMappedModel
         // Will except if not
         self::checkServicesExist(
             $externalServices,
-            [PersonFinderInterface::class],
+            [PersonFinderInterface::class, SportFinderInterface::class],
         );
 
         $deletedAt = null;
@@ -48,11 +47,17 @@ class TeamModel extends AbstractMappedModel
 
         $teamPeople = $personFinder->getForTeam($teamId);
 
+        /** @var SportFinderInterface */
+        $sportFinder = $externalServices[SportFinderInterface::class];
+
+        $sport = $sportFinder->getById(SportId::fromString($row['sport_id']));
+
         return new TeamModel(
             $teamId,
             $row['name'],
             $row['description'],
             $teamPeople,
+            $sport,
             DateTime::fromString($row['created_at']),
             DateTime::fromString($row['updated_at']),
             $deletedAt

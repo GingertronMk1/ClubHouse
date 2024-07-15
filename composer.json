@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/doctrine-migrations-bundle": "^3.0",
+        "fakerphp/faker": "^1.23",
         "symfony/console": "7.1.*",
         "symfony/dotenv": "7.1.*",
         "symfony/flex": "^2",

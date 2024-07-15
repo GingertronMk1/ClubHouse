@@ -6,6 +6,8 @@ namespace App\Infrastructure\Sport;
 
 use App\Application\Sport\SportFinderInterface;
 use App\Application\Sport\SportModel;
+use App\Application\Team\TeamFinderInterface;
+use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
@@ -62,12 +64,33 @@ class DbalSportFinder implements SportFinderInterface
 
         foreach ($result as $row) {
             try {
-                $returnVal[] = SportModel::createFromRow($row);
+                $returnVal[] = $this->createFromRow($row);
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
+                throw $e;
             }
         }
 
         return $returnVal;
+    }
+
+    public function setRelationshipGetting(bool $set = true): void
+    {
+        $this->getRelatedModels = $set;
+    }
+
+    private function createFromRow(array $row): SportModel
+    {
+        $id = SportId::fromString($row['id']);
+
+        /* @var TeamFinderInterface */
+        return new SportModel(
+            $id,
+            $row['name'],
+            $row['description'],
+            DateTime::fromString($row['created_at']),
+            DateTime::fromString($row['updated_at']),
+            isset($row['deleted_at']) ? DateTime::fromString($row['deleted_at']) : null
+        );
     }
 }

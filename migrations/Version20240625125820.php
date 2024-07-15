@@ -37,6 +37,10 @@ final class Version20240625125820 extends AbstractMigration
             ]
         );
         $table->addColumn(
+            'sport_id',
+            'string'
+        );
+        $table->addColumn(
             'created_at',
             'string',
         );
@@ -52,6 +56,7 @@ final class Version20240625125820 extends AbstractMigration
             ]
         );
         $table->setPrimaryKey(['id']);
+        $table->addForeignKeyConstraint('sports', ['sport_id'], ['id']);
 
         $pivot = $schema->createTable('team_people');
         $pivot->addColumn(
