@@ -18,12 +18,15 @@ class CreateTeamCommandHandler
 
     public function handle(CreateTeamCommand $command): TeamId
     {
+        if (!$command->sport) {
+            throw new \Exception();
+        }
         $team = new TeamEntity(
             $this->teamRepository->generateId(),
             $command->name,
             $command->description,
             $command->people,
-            $command->sport
+            $command->sport->id
         );
 
         return $this->teamRepository->store($team);

@@ -38,7 +38,7 @@ class CreateTeamFormType extends AbstractType
                 [
                     'choices' => $this->sportFinder->getAll(),
                     'choice_value' => 'id',
-                    'choice_label' => 'name'
+                    'choice_label' => 'name',
                 ]
             )
             ->add(

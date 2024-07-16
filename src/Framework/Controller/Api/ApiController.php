@@ -19,7 +19,7 @@ class ApiController extends AbstractController
         return new JsonResponse(
             [
                 'sports' => $sportFinder->getAll(),
-                'teams' => $teamFinder->getAll()
+                'teams' => $teamFinder->getAll(),
             ]
         );
     }

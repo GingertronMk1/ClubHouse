@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Team;
 
+use App\Application\Person\PersonFinderInterface;
 use App\Application\Sport\SportFinderInterface;
 use App\Application\Team\TeamFinderInterface;
 use App\Application\Team\TeamModel;
@@ -21,7 +22,8 @@ class DbalTeamFinder implements TeamFinderInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly LoggerInterface $logger,
-        private readonly SportFinderInterface $sportFinder
+        private readonly SportFinderInterface $sportFinder,
+        private readonly PersonFinderInterface $personFinder
     ) {
     }
 
@@ -115,11 +117,13 @@ class DbalTeamFinder implements TeamFinderInterface
         $teamId = TeamId::fromString($row['id']);
 
         $sport = $this->sportFinder->getById(SportId::fromString($row['sport_id']));
+        $people = $this->personFinder->getForTeam($teamId);
 
         return new TeamModel(
             $teamId,
             $row['name'],
             $row['description'],
+            $people,
             $sport,
             DateTime::fromString($row['created_at']),
             DateTime::fromString($row['updated_at']),

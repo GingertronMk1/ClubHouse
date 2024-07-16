@@ -18,5 +18,8 @@ interface TeamFinderInterface
      */
     public function getAll(array $teamIds = []): array;
 
+    /**
+     * @return array<TeamModel>
+     */
     public function getForSport(SportId $id): array;
 }

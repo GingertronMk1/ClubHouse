@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Application\Team;
 
-use App\Application\Common\AbstractMappedModel;
-use App\Application\Person\PersonFinderInterface;
-use App\Application\Sport\SportFinderInterface;
+use App\Application\Person\PersonModel;
 use App\Application\Sport\SportModel;
 use App\Domain\Common\ValueObject\DateTime;
-use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
-use JsonSerializable;
 
-class TeamModel implements JsonSerializable
+class TeamModel implements \JsonSerializable
 {
+    /**
+     * @param array<PersonModel> $people
+     */
     public function __construct(
         public readonly TeamId $id,
         public readonly string $name,

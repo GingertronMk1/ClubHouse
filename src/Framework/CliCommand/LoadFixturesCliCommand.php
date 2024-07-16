@@ -62,6 +62,7 @@ class LoadFixturesCliCommand extends Command
             ->readfile('assets/fixtures/sports.json')
         ;
 
+        /** @var array<string, int> */
         $sports = json_decode($sportsJson, true);
 
         $sportSection = $output->section();

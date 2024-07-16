@@ -6,7 +6,6 @@ namespace App\Application\Team\Command;
 
 use App\Application\Sport\SportModel;
 use App\Domain\Person\ValueObject\PersonId;
-use App\Domain\Sport\ValueObject\SportId;
 
 class CreateTeamCommand
 {

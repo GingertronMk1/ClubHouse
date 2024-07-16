@@ -73,6 +73,9 @@ class DbalSportFinder implements SportFinderInterface
         return $returnVal;
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     private function createFromRow(array $row): SportModel
     {
         $id = SportId::fromString($row['id']);
