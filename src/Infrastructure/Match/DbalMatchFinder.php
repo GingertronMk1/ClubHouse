@@ -13,7 +13,6 @@ use App\Domain\Match\ValueObject\MatchId;
 use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalMatchFinder implements MatchFinderInterface
@@ -22,7 +21,6 @@ class DbalMatchFinder implements MatchFinderInterface
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
         private readonly SportFinderInterface $sportFinder,
         private readonly TeamFinderInterface $teamFinder,
     ) {
@@ -44,13 +42,7 @@ class DbalMatchFinder implements MatchFinderInterface
             throw new NotFoundHttpException('Match not found');
         }
 
-        return MatchModel::createFromRow(
-            $result,
-            [
-                SportFinderInterface::class => $this->sportFinder,
-                TeamFinderInterface::class => $this->teamFinder,
-            ]
-        );
+        return $this->createFromRow($result);
     }
 
     public function getAll(array $ids = []): array
@@ -69,23 +61,15 @@ class DbalMatchFinder implements MatchFinderInterface
             ;
         }
 
-        $result = $query->fetchAllAssociative();
-
-        $returnVal = [];
-
-        foreach ($result as $row) {
-            $returnVal[] = MatchModel::createFromRow(
-                $row,
-                [
-                    SportFinderInterface::class => $this->sportFinder,
-                    TeamFinderInterface::class => $this->teamFinder,
-                ]
-            );
-        }
-
-        return $returnVal;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
     }
 
+    /**
+     * @param array<string, mixed> $row
+     */
     private function createFromRow(array $row): MatchModel
     {
         $team1 = null;

@@ -9,7 +9,6 @@ use App\Application\Sport\SportModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalSportFinder implements SportFinderInterface
@@ -18,7 +17,6 @@ class DbalSportFinder implements SportFinderInterface
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -57,15 +55,10 @@ class DbalSportFinder implements SportFinderInterface
             ;
         }
 
-        $result = $query->fetchAllAssociative();
-
-        $returnVal = [];
-
-        foreach ($result as $row) {
-            $returnVal[] = $this->createFromRow($row);
-        }
-
-        return $returnVal;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
     }
 
     /**

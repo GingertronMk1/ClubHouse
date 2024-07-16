@@ -14,8 +14,6 @@ use App\Domain\Team\ValueObject\TeamId;
 use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\User\ValueObject\UserId;
-use Faker\Factory;
-use Faker\Generator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,9 +28,6 @@ use Symfony\Component\Filesystem\Filesystem;
 )]
 class LoadFixturesCliCommand extends Command
 {
-    private const TEAMS_PER_SPORT = 4;
-    private readonly Generator $faker;
-    private int $personIndex = 1;
     private const PROGRESS_BAR_FORMAT = '%current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %message%';
 
     public function __construct(
@@ -43,7 +38,6 @@ class LoadFixturesCliCommand extends Command
         private readonly SportRepositoryInterface $sportRepository
     ) {
         parent::__construct();
-        $this->faker = Factory::create('en_GB');
     }
 
     protected function configure(): void
@@ -72,7 +66,7 @@ class LoadFixturesCliCommand extends Command
         $sportBar = $io->createProgressBar();
         $sportBar->setFormat(self::PROGRESS_BAR_FORMAT);
 
-        foreach($sportBar->iterate($things['sports']) as $sport) {
+        foreach ($sportBar->iterate($things['sports']) as $sport) {
             $sportEntity = new SportEntity(
                 SportId::fromString($sport['id']),
                 $sport['name'],
@@ -87,7 +81,7 @@ class LoadFixturesCliCommand extends Command
         $io->title('People');
         $peopleBar = $io->createProgressBar();
         $peopleBar->setFormat(self::PROGRESS_BAR_FORMAT);
-        foreach($peopleBar->iterate($things['people']) as $person) {
+        foreach ($peopleBar->iterate($things['people']) as $person) {
             $userId = null;
             if ($person['user'] ?? false) {
                 $personUser = $person['user'];
@@ -113,7 +107,7 @@ class LoadFixturesCliCommand extends Command
         $io->title('Teams');
         $teamBar = $io->createProgressBar();
         $teamBar->setFormat(self::PROGRESS_BAR_FORMAT);
-        foreach($teamBar->iterate($things['teams']) as $team) {
+        foreach ($teamBar->iterate($things['teams']) as $team) {
             $teamEntity = new TeamEntity(
                 TeamId::fromString($team['id']),
                 $team['name'],

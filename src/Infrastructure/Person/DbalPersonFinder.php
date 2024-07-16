@@ -12,7 +12,6 @@ use App\Domain\Person\ValueObject\PersonId;
 use App\Domain\Team\ValueObject\TeamId;
 use App\Domain\User\ValueObject\UserId;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalPersonFinder implements PersonFinderInterface
@@ -22,7 +21,6 @@ class DbalPersonFinder implements PersonFinderInterface
     public function __construct(
         private readonly Connection $connection,
         private readonly UserFinderInterface $userFinder,
-        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -64,15 +62,10 @@ class DbalPersonFinder implements PersonFinderInterface
             ;
         }
 
-        $result = $query->fetchAllAssociative();
-
-        $returnVal = [];
-
-        foreach ($result as $row) {
-            $returnVal[] = $this->createFromRow($row);
-        }
-
-        return $returnVal;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
     }
 
     public function getForTeam(TeamId $teamId): array

@@ -12,7 +12,6 @@ use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalTeamFinder implements TeamFinderInterface
@@ -21,7 +20,6 @@ class DbalTeamFinder implements TeamFinderInterface
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly LoggerInterface $logger,
         private readonly SportFinderInterface $sportFinder,
         private readonly PersonFinderInterface $personFinder
     ) {
@@ -62,15 +60,10 @@ class DbalTeamFinder implements TeamFinderInterface
             ;
         }
 
-        $result = $query->fetchAllAssociative();
-
-        $returnVal = [];
-
-        foreach ($result as $row) {
-            $returnVal[] = $this->createFromRow($row);
-        }
-
-        return $returnVal;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
     }
 
     public function getForSport(SportId $id): array
@@ -84,15 +77,10 @@ class DbalTeamFinder implements TeamFinderInterface
             ->setParameter('sport_id', (string) $id)
         ;
 
-        $result = $query->fetchAllAssociative();
-
-        $returnVal = [];
-
-        foreach ($result as $row) {
-            $returnVal[] = $this->createFromRow($row);
-        }
-
-        return $returnVal;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
     }
 
     /**
