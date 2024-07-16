@@ -62,12 +62,7 @@ class DbalSportFinder implements SportFinderInterface
         $returnVal = [];
 
         foreach ($result as $row) {
-            try {
-                $returnVal[] = $this->createFromRow($row);
-            } catch (\Throwable $e) {
-                $this->logger->error($e->getMessage());
-                throw $e;
-            }
+            $returnVal[] = $this->createFromRow($row);
         }
 
         return $returnVal;

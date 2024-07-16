@@ -69,11 +69,7 @@ class DbalPersonFinder implements PersonFinderInterface
         $returnVal = [];
 
         foreach ($result as $row) {
-            try {
-                $returnVal[] = $this->createFromRow($row);
-            } catch (\Throwable $e) {
-                $this->logger->error($e->getMessage());
-            }
+            $returnVal[] = $this->createFromRow($row);
         }
 
         return $returnVal;
@@ -83,22 +79,22 @@ class DbalPersonFinder implements PersonFinderInterface
     {
         $peopleQuery = $this->connection->createQueryBuilder();
         $peopleQuery
-            ->select('person_id')
-            ->from('team_people')
-            ->where('team_id = :team_id')
+            ->select(self::TABLE_NAME.'.*')
+            ->from(self::TABLE_NAME)
+            ->innerJoin(
+                'people',
+                'team_people',
+                'team_people',
+                'team_people.person_id = '.self::TABLE_NAME.'.id',
+            )
+            ->where('team_people.team_id = :team_id')
             ->setParameter('team_id', (string) $teamId)
         ;
-        $peopleIds = $peopleQuery->fetchFirstColumn();
 
-        $peopleIds = array_map(fn (string $personId) => PersonId::fromString($personId), $peopleIds);
-
-        $teamPeople = [];
-
-        if (!empty($peopleIds)) {
-            $teamPeople = $this->getAll($peopleIds);
-        }
-
-        return $teamPeople;
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $peopleQuery->fetchAllAssociative()
+        );
     }
 
     /**

@@ -16,7 +16,7 @@ class ApiController extends AbstractController
     public function home(
         SportFinderInterface $sportFinder,
         TeamFinderInterface $teamFinder,
-        PersonFinderInterface $personFinder
+        PersonFinderInterface $personFinder,
     ): JsonResponse {
         return new JsonResponse(
             [

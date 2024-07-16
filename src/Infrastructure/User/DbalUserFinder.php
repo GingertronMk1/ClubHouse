@@ -51,11 +51,7 @@ class DbalUserFinder implements UserFinderInterface
         $returnVal = [];
 
         foreach ($result as $row) {
-            try {
-                $returnVal[] = $this->createFromRow($row);
-            } catch (\Throwable $e) {
-                $this->logger->error($e->getMessage());
-            }
+            $returnVal[] = $this->createFromRow($row);
         }
 
         return $returnVal;
