@@ -22,7 +22,8 @@ class CreateTeamCommandHandler
             $this->teamRepository->generateId(),
             $command->name,
             $command->description,
-            $command->people
+            $command->people,
+            $command->sport
         );
 
         return $this->teamRepository->store($team);

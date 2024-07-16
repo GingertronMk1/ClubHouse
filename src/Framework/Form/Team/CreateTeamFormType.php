@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Framework\Form\Team;
 
 use App\Application\Person\PersonFinderInterface;
+use App\Application\Sport\SportFinderInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,7 +16,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 class CreateTeamFormType extends AbstractType
 {
     public function __construct(
-        private readonly PersonFinderInterface $personFinder
+        private readonly PersonFinderInterface $personFinder,
+        private readonly SportFinderInterface $sportFinder,
     ) {
     }
 
@@ -28,6 +30,15 @@ class CreateTeamFormType extends AbstractType
                 TextareaType::class,
                 [
                     'required' => false,
+                ]
+            )
+            ->add(
+                'sport',
+                ChoiceType::class,
+                [
+                    'choices' => $this->sportFinder->getAll(),
+                    'choice_value' => 'id',
+                    'choice_label' => 'name'
                 ]
             )
             ->add(
