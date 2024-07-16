@@ -6,7 +6,6 @@ namespace App\Infrastructure\Sport;
 
 use App\Application\Sport\SportFinderInterface;
 use App\Application\Sport\SportModel;
-use App\Application\Team\TeamFinderInterface;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use Doctrine\DBAL\Connection;
@@ -39,7 +38,7 @@ class DbalSportFinder implements SportFinderInterface
             throw new NotFoundHttpException('Team not found');
         }
 
-        return SportModel::createFromRow($result);
+        return $this->createFromRow($result);
     }
 
     public function getAll(array $sportIds = []): array
@@ -72,11 +71,6 @@ class DbalSportFinder implements SportFinderInterface
         }
 
         return $returnVal;
-    }
-
-    public function setRelationshipGetting(bool $set = true): void
-    {
-        $this->getRelatedModels = $set;
     }
 
     private function createFromRow(array $row): SportModel

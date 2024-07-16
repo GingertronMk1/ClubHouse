@@ -107,7 +107,6 @@ class DbalTeamFinder implements TeamFinderInterface
      */
     private function createFromRow(array $row): TeamModel
     {
-        $this->sportFinder->setRelationshipGetting(false);
         $deletedAt = null;
         if (isset($row['deleted_at'])) {
             $deletedAt = DateTime::fromString($row['deleted_at']);

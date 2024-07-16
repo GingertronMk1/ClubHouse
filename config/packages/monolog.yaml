@@ -6,7 +6,9 @@ when@dev:
     monolog:
         handlers:
             main:
-                type: console
+                type:  stream
+                path:  "php://stderr"
+                level: debug
 
 when@test:
     monolog:

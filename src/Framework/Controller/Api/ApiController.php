@@ -3,6 +3,7 @@
 namespace App\Framework\Controller\Api;
 
 use App\Application\Sport\SportFinderInterface;
+use App\Application\Team\TeamFinderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -12,8 +13,14 @@ class ApiController extends AbstractController
 {
     #[Route(path: '/', name: 'home')]
     public function home(
-        SportFinderInterface $sportFinder
+        SportFinderInterface $sportFinder,
+        TeamFinderInterface $teamFinder,
     ): JsonResponse {
-        return new JsonResponse($sportFinder->getAll());
+        return new JsonResponse(
+            [
+                'sports' => $sportFinder->getAll(),
+                'teams' => $teamFinder->getAll()
+            ]
+        );
     }
 }

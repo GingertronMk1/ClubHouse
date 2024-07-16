@@ -11,8 +11,9 @@ use App\Application\Sport\SportModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
+use JsonSerializable;
 
-class TeamModel extends AbstractMappedModel
+class TeamModel implements JsonSerializable
 {
     public function __construct(
         public readonly TeamId $id,
@@ -25,42 +26,16 @@ class TeamModel extends AbstractMappedModel
     ) {
     }
 
-    public static function createFromRow(array $row, array $externalServices = []): self
+    public function jsonSerialize(): mixed
     {
-        // Will except if not
-        self::checkServicesExist(
-            $externalServices,
-            [PersonFinderInterface::class, SportFinderInterface::class],
-        );
-
-        $deletedAt = null;
-        if (isset($row['deleted_at'])) {
-            $deletedAt = DateTime::fromString($row['deleted_at']);
-        }
-
-        $teamId = TeamId::fromString($row['id']);
-
-        /**
-         * @var PersonFinderInterface
-         */
-        $personFinder = $externalServices[PersonFinderInterface::class];
-
-        $teamPeople = $personFinder->getForTeam($teamId);
-
-        /** @var SportFinderInterface */
-        $sportFinder = $externalServices[SportFinderInterface::class];
-
-        $sport = $sportFinder->getById(SportId::fromString($row['sport_id']));
-
-        return new TeamModel(
-            $teamId,
-            $row['name'],
-            $row['description'],
-            $teamPeople,
-            $sport,
-            DateTime::fromString($row['created_at']),
-            DateTime::fromString($row['updated_at']),
-            $deletedAt
-        );
+        return [
+            'id' => (string) $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'sport' => $this->sport,
+            'createdAt' => (string) $this->createdAt,
+            'updatedAt' => (string) $this->updatedAt,
+            'deletedAt' => (string) $this->deletedAt,
+        ];
     }
 }
