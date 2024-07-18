@@ -20,7 +20,7 @@ class CreateMatchPersonFormType extends AbstractType
     ) {
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $match = $options['match'];
         if (MatchModel::class !== get_class($match)) {
