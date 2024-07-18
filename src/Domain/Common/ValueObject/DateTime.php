@@ -5,7 +5,7 @@ namespace App\Domain\Common\ValueObject;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class DateTime implements \Stringable
+class DateTime implements \Stringable, \JsonSerializable
 {
     public const FORMAT_SECONDS = 'Y-m-d H:i:s';
     public const FORMAT_MILLISECONDS = 'Y-m-d H:i:s.v';
@@ -180,5 +180,10 @@ class DateTime implements \Stringable
         return (int) $this->toDateTimeImmutable()
             ->format('Uu')
         ;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return (string) $this;
     }
 }

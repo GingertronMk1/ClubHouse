@@ -6,6 +6,7 @@ namespace App\Application\Team\Command;
 
 use App\Application\Person\PersonModel;
 use App\Application\Team\TeamModel;
+use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\ValueObject\TeamId;
 
 class UpdateTeamCommand
@@ -18,6 +19,7 @@ class UpdateTeamCommand
         public string $name,
         public string $description,
         public array $people,
+        public SportId $sportId
     ) {
     }
 
@@ -27,7 +29,8 @@ class UpdateTeamCommand
             $team->id,
             $team->name,
             $team->description,
-            $team->people
+            $team->people,
+            $team->sport->id
         );
     }
 }

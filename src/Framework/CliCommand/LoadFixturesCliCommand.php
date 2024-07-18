@@ -4,17 +4,23 @@ namespace App\Framework\CliCommand;
 
 use App\Domain\Person\PersonEntity;
 use App\Domain\Person\PersonRepositoryInterface;
+use App\Domain\Person\ValueObject\PersonId;
 use App\Domain\Sport\SportEntity;
 use App\Domain\Sport\SportRepositoryInterface;
+use App\Domain\Sport\ValueObject\SportId;
 use App\Domain\Team\TeamEntity;
 use App\Domain\Team\TeamRepositoryInterface;
+use App\Domain\Team\ValueObject\TeamId;
 use App\Domain\User\UserEntity;
 use App\Domain\User\UserRepositoryInterface;
+use App\Domain\User\ValueObject\UserId;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(
     name: 'app:load-fixtures',
@@ -22,10 +28,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class LoadFixturesCliCommand extends Command
 {
+    private const PROGRESS_BAR_FORMAT = '%current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %message%';
+
     public function __construct(
-        private readonly UserRepositoryInterface $userRepositoryInterface,
-        private readonly PersonRepositoryInterface $personRepositoryInterface,
-        private readonly TeamRepositoryInterface $teamRepositoryInterface,
+        private readonly Filesystem $filesystem,
+        private readonly UserRepositoryInterface $userRepository,
+        private readonly PersonRepositoryInterface $personRepository,
+        private readonly TeamRepositoryInterface $teamRepository,
         private readonly SportRepositoryInterface $sportRepository
     ) {
         parent::__construct();
@@ -37,56 +46,81 @@ class LoadFixturesCliCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$output instanceof ConsoleOutputInterface) {
+            $output->writeln('Not a console output');
+
+            return Command::FAILURE;
+        }
+
         $io = new SymfonyStyle($input, $output);
 
-        foreach ($io->progressIterate(range(1, 15)) as $value) {
-            $user = new UserEntity(
-                $this->userRepositoryInterface->generateId(),
-                "testUser{$value}@clubhouse.test",
-                '12345',
-                []
-            );
-            $userId = $this->userRepositoryInterface->store($user);
+        $sportsJson = $this
+            ->filesystem
+            ->readfile('assets/fixtures/fixtures.json')
+        ;
 
-            $person = new PersonEntity(
-                $this->personRepositoryInterface->generateId(),
-                "Test Person {$value}",
+        /** @var array<string, array<mixed>> */
+        $things = json_decode($sportsJson, true);
+
+        $io->title('Sports');
+        $sportBar = $io->createProgressBar();
+        $sportBar->setFormat(self::PROGRESS_BAR_FORMAT);
+
+        foreach ($sportBar->iterate($things['sports']) as $sport) {
+            $sportEntity = new SportEntity(
+                SportId::fromString($sport['id']),
+                $sport['name'],
+                $sport['description']
+            );
+            $sportBar->setMessage($sportEntity->name);
+            $this->sportRepository->store($sportEntity);
+        }
+
+        $io->newLine(4);
+
+        $io->title('People');
+        $peopleBar = $io->createProgressBar();
+        $peopleBar->setFormat(self::PROGRESS_BAR_FORMAT);
+        foreach ($peopleBar->iterate($things['people']) as $person) {
+            $userId = null;
+            if ($person['user'] ?? false) {
+                $personUser = $person['user'];
+                $userEntity = new UserEntity(
+                    UserId::fromString($personUser['id']),
+                    $personUser['email'],
+                    '12345',
+                    []
+                );
+                $userId = $this->userRepository->store($userEntity);
+            }
+
+            $personEntity = new PersonEntity(
+                PersonId::fromString($person['id']),
+                $person['name'],
                 $userId
             );
-            $personId = $this->personRepositoryInterface->store($person);
+            $peopleBar->setMessage($personEntity->name);
+            $this->personRepository->store($personEntity);
+        }
+        $io->newLine(4);
 
-            $team = new TeamEntity(
-                $this->teamRepositoryInterface->generateId(),
-                "Test Team {$value}",
-                $value % 2 ? "This is test team number {$value}." : '',
-                []
+        $io->title('Teams');
+        $teamBar = $io->createProgressBar();
+        $teamBar->setFormat(self::PROGRESS_BAR_FORMAT);
+        foreach ($teamBar->iterate($things['teams']) as $team) {
+            $teamEntity = new TeamEntity(
+                TeamId::fromString($team['id']),
+                $team['name'],
+                $team['description'],
+                array_map(fn (array $person) => PersonId::fromString($person['id']), $team['people']),
+                SportId::fromString($team['sport']['id'])
             );
-            $teamId = $this->teamRepositoryInterface->store($team);
+            $teamBar->setMessage($teamEntity->name);
+            $this->teamRepository->store($teamEntity);
         }
 
-        foreach ($this->getSports() as $sportName => $sportDescription) {
-            $sport = new SportEntity(
-                $this->sportRepository->generateId(),
-                $sportName,
-                $sportDescription
-            );
-
-            $this->sportRepository->store($sport);
-        }
+        $io->newLine(4);
 
         return Command::SUCCESS;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getSports(): array
-    {
-        return [
-            'Rugby League' => '13 people a side and an oval ball',
-            'Rugby Union' => '15 people a side and an oval ball',
-            'American Football' => '11 people a side and an oval ball, but you\'re allowed to throw it forwards',
-            'Canadian Football' => '11 people a side and an oval ball, but you\'re allowed to throw it forwards, the field\'s bigger, and there\'s only 3 downs.',
-        ];
     }
 }

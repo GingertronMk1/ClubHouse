@@ -6,9 +6,9 @@ namespace App\Infrastructure\Sport;
 
 use App\Application\Sport\SportFinderInterface;
 use App\Application\Sport\SportModel;
+use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 use Doctrine\DBAL\Connection;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DbalSportFinder implements SportFinderInterface
@@ -17,7 +17,6 @@ class DbalSportFinder implements SportFinderInterface
 
     public function __construct(
         private readonly Connection $connection,
-        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -37,7 +36,7 @@ class DbalSportFinder implements SportFinderInterface
             throw new NotFoundHttpException('Team not found');
         }
 
-        return SportModel::createFromRow($result);
+        return $this->createFromRow($result);
     }
 
     public function getAll(array $sportIds = []): array
@@ -56,18 +55,27 @@ class DbalSportFinder implements SportFinderInterface
             ;
         }
 
-        $result = $query->fetchAllAssociative();
+        return array_map(
+            fn (array $row) => $this->createFromRow($row),
+            $query->fetchAllAssociative()
+        );
+    }
 
-        $returnVal = [];
+    /**
+     * @param array<string, mixed> $row
+     */
+    private function createFromRow(array $row): SportModel
+    {
+        $id = SportId::fromString($row['id']);
 
-        foreach ($result as $row) {
-            try {
-                $returnVal[] = SportModel::createFromRow($row);
-            } catch (\Throwable $e) {
-                $this->logger->error($e->getMessage());
-            }
-        }
-
-        return $returnVal;
+        /* @var TeamFinderInterface */
+        return new SportModel(
+            $id,
+            $row['name'],
+            $row['description'],
+            DateTime::fromString($row['created_at']),
+            DateTime::fromString($row['updated_at']),
+            isset($row['deleted_at']) ? DateTime::fromString($row['deleted_at']) : null
+        );
     }
 }

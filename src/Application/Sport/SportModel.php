@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Application\Sport;
 
-use App\Application\Common\AbstractMappedModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Sport\ValueObject\SportId;
 
-class SportModel extends AbstractMappedModel
+class SportModel implements \JsonSerializable
 {
     public function __construct(
         public readonly SportId $id,
@@ -20,15 +19,15 @@ class SportModel extends AbstractMappedModel
     ) {
     }
 
-    public static function createFromRow(array $row, array $externalServices = []): self
+    public function jsonSerialize(): mixed
     {
-        return new self(
-            SportId::fromString($row['id']),
-            $row['name'],
-            $row['description'],
-            DateTime::fromString($row['created_at']),
-            DateTime::fromString($row['updated_at']),
-            isset($row['deleted_at']) ? DateTime::fromString($row['deleted_at']) : null
-        );
+        return [
+            'id' => (string) $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'createdAt' => (string) $this->createdAt,
+            'updatedAt' => (string) $this->updatedAt,
+            'deletedAt' => (string) $this->deletedAt,
+        ];
     }
 }

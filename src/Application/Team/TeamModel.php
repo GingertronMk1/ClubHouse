@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Application\Team;
 
-use App\Application\Common\AbstractMappedModel;
-use App\Application\Person\PersonFinderInterface;
 use App\Application\Person\PersonModel;
+use App\Application\Sport\SportModel;
 use App\Domain\Common\ValueObject\DateTime;
 use App\Domain\Team\ValueObject\TeamId;
 
-class TeamModel extends AbstractMappedModel
+class TeamModel implements \JsonSerializable
 {
     /**
      * @param array<PersonModel> $people
@@ -20,42 +19,24 @@ class TeamModel extends AbstractMappedModel
         public readonly string $name,
         public readonly string $description,
         public readonly array $people,
+        public readonly SportModel $sport,
         public readonly DateTime $createdAt,
         public readonly DateTime $updatedAt,
         public readonly ?DateTime $deletedAt,
     ) {
     }
 
-    public static function createFromRow(array $row, array $externalServices = []): self
+    public function jsonSerialize(): mixed
     {
-        // Will except if not
-        self::checkServicesExist(
-            $externalServices,
-            [PersonFinderInterface::class],
-        );
-
-        $deletedAt = null;
-        if (isset($row['deleted_at'])) {
-            $deletedAt = DateTime::fromString($row['deleted_at']);
-        }
-
-        $teamId = TeamId::fromString($row['id']);
-
-        /**
-         * @var PersonFinderInterface
-         */
-        $personFinder = $externalServices[PersonFinderInterface::class];
-
-        $teamPeople = $personFinder->getForTeam($teamId);
-
-        return new TeamModel(
-            $teamId,
-            $row['name'],
-            $row['description'],
-            $teamPeople,
-            DateTime::fromString($row['created_at']),
-            DateTime::fromString($row['updated_at']),
-            $deletedAt
-        );
+        return [
+            'id' => (string) $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'sport' => $this->sport,
+            'people' => $this->people,
+            'createdAt' => (string) $this->createdAt,
+            'updatedAt' => (string) $this->updatedAt,
+            'deletedAt' => (string) $this->deletedAt,
+        ];
     }
 }

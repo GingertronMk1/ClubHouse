@@ -23,7 +23,8 @@ class UpdateTeamCommandHandler
             $command->id,
             $command->name,
             $command->description,
-            array_map(fn (PersonModel $person) => $person->id, $command->people)
+            array_map(fn (PersonModel $person) => $person->id, $command->people),
+            $command->sportId
         );
 
         return $this->teamRepository->store($team);

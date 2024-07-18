@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+source .env
+
+./_docker/bin/app/console --env=test doctrine:migrations:migrate --no-interaction \
+    && ./_docker/bin/app/exec vendor/bin/phpunit "$@" \
+    && ./_docker/bin/app/console --env=test doctrine:database:drop --force

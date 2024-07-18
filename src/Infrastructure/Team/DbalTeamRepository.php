@@ -43,6 +43,8 @@ class DbalTeamRepository extends AbstractDbalRepository implements TeamRepositor
         $removeQuery = $this->connection->createQueryBuilder();
         $removeQuery
             ->delete('team_people')
+            ->andWhere('team_id = :team_id')
+            ->setParameter('team_id', (string) $team->id)
         ;
 
         foreach ($team->peopleIds as $n => $personId) {
