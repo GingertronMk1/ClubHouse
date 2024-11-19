@@ -87,7 +87,7 @@
         }
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^9.5",
         "qossmic/deptrac": "^2.0",
         "symfony/browser-kit": "7.1.*",
