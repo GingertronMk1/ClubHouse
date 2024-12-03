@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a3b4ebacac24e3e1ca42d0f582d6869",
+    "content-hash": "308c747786c23675970f3e08d4f7a03d",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -8198,16 +8198,16 @@
         },
         {
             "name": "symfony/web-profiler-bundle",
-            "version": "v7.1.9",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-profiler-bundle.git",
-                "reference": "6f26474e0e8ff746cb0abaddf9ebe0b067172fb1"
+                "reference": "8843019fa7140a4aa079f1a8d71fd010f61de5f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/6f26474e0e8ff746cb0abaddf9ebe0b067172fb1",
-                "reference": "6f26474e0e8ff746cb0abaddf9ebe0b067172fb1",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/8843019fa7140a4aa079f1a8d71fd010f61de5f2",
+                "reference": "8843019fa7140a4aa079f1a8d71fd010f61de5f2",
                 "shasum": ""
             },
             "require": {
@@ -8217,12 +8217,13 @@
                 "symfony/http-kernel": "^6.4|^7.0",
                 "symfony/routing": "^6.4|^7.0",
                 "symfony/twig-bundle": "^6.4|^7.0",
-                "twig/twig": "^3.10"
+                "twig/twig": "^3.12"
             },
             "conflict": {
                 "symfony/form": "<6.4",
                 "symfony/mailer": "<6.4",
-                "symfony/messenger": "<6.4"
+                "symfony/messenger": "<6.4",
+                "symfony/serializer": "<7.2"
             },
             "require-dev": {
                 "symfony/browser-kit": "^6.4|^7.0",
@@ -8259,7 +8260,7 @@
                 "dev"
             ],
             "support": {
-                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.1.9"
+                "source": "https://github.com/symfony/web-profiler-bundle/tree/v7.2.0"
             },
             "funding": [
                 {
@@ -8275,7 +8276,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-19T10:11:44+00:00"
+            "time": "2024-11-19T10:12:55+00:00"
         },
         {
             "name": "symplify/easy-coding-standard",
